@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import visual from "../assets/file14252.png";
-import fashion from "../assets/fashion-designing.png";
-import retail from "../assets/7a8a5124-75b8-4b46-bebf-e70e8ad411b6.jpg";
-import fashionproductmanagement from "../assets/photo-1470309864661-68328b2cd0a5 (1).jpeg";
+import visual from "../../assets/file14252.png";
+import fashion from "../../assets/fashion-designing.png";
+import retail from "../../assets/7a8a5124-75b8-4b46-bebf-e70e8ad411b6.jpg";
+import fashionproductmanagement from "../../assets/photo-1470309864661-68328b2cd0a5 (1).jpeg";
 
 const allCourses = {
   masters: [

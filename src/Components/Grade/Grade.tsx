@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Row, Col, Form, Table, Button, Alert } from "react-bootstrap";
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import GradeNavbar from "./GradeNavbar";
-import TopBar from "./Topbar";
-import MainNav from "./MainNav";
+import TopBar from "../Common/Topbar";
+import MainNav from "../Common/MainNav";
 
 type Category = {
   name: string;

@@ -1,9 +1,9 @@
 import type { RouteObject } from "react-router-dom";
-import Home from "../Components/Home";
-import Grade from "../Components/Grade";
+import Home from "../Components/Home/Home";
+import Grade from "../Components/Grade/Grade";
 
 import FlipBookUploader from "../Components/FlipBookUploader";
-import RubricEditor from "../Components/RubricEditor";
+import RubricEditor from "../Components/Rubrics/RubricEditor";
 
 
 

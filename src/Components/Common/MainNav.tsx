@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/injex-bglogo.png";
+import logo from "../../assets/injex-bglogo.png";
 
 const MainNav = () => {
   return (

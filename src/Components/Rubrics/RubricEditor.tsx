@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import { FaTrash, FaEdit } from "react-icons/fa";
-import Topbar from "./Topbar";
-import MainNav from "./MainNav";
-import GradeNavbar from "./GradeNavbar";
+import Topbar from "../Common/Topbar";
+import MainNav from "../Common/MainNav";
+import GradeNavbar from "../Grade/GradeNavbar";
 import NewCategoryModal from "./NewCategoryModal";
 import EditCriteriaModal from "./EditCriteriaModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";

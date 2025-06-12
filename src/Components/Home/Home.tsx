@@ -1,19 +1,19 @@
 import React from "react";
-import MainNav from "./MainNav";
-import TopBar from "./Topbar";
+import MainNav from "../Common/MainNav";
+import TopBar from "../Common/Topbar";
 import { Carousel } from "react-bootstrap";
 import CountUp from "react-countup";
-import bgImage from "../assets/bg-image-17-1.png";
-import mainSlider from "../assets/main-slider.png";
-import groupImage from "../assets/Group-6-2.png";
-import image from "../assets/image-6.png";
+import bgImage from "../../assets/bg-image-17-1.png";
+import mainSlider from "../../assets/main-slider.png";
+import groupImage from "../../assets/Group-6-2.png";
+import image from "../../assets/image-6.png";
 import { FaDumbbell, FaDesktop } from "react-icons/fa";
 import CoursePage from "./CoursePage";
 import { Button } from "react-bootstrap";
 import { FaClock, FaMapMarkerAlt } from "react-icons/fa";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import Footer from "./Footer";
+import Footer from "../Common/Footer";
 import {
   FaRocket,
   FaFlask,
