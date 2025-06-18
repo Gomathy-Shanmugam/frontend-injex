@@ -1,41 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { IoClose } from 'react-icons/io5';
+// Be sure to import the CSS
 
 interface EditPointsModalProps {
   show: boolean;
   onHide: () => void;
-  uniquePoints: number[];
-  setCriteriaList: (updated: any[]) => void;
-  criteriaList: any[];
+  predefinedPoints: { label: string; points: number }[];
+  onSave: (updatedPoints: { label: string; points: number }[]) => void;
 }
 
 const EditPointsModal: React.FC<EditPointsModalProps> = ({
   show,
   onHide,
-  uniquePoints,
-  setCriteriaList,
-  criteriaList,
+  predefinedPoints,
+  onSave,
 }) => {
   const [pointsMap, setPointsMap] = useState<{ [label: string]: number }>({});
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const map: { [label: string]: number } = {};
-    criteriaList[0]?.levels.forEach((level: { label: string | number; points: number; }) => {
-      map[level.label] = level.points;
+    predefinedPoints.forEach(({ label, points }) => {
+      map[label] = points;
     });
     setPointsMap(map);
-  }, [criteriaList]);
+  }, [predefinedPoints]);
 
   const handleUpdate = () => {
-    const updated = criteriaList.map((criteria) => ({
-      ...criteria,
-      levels: criteria.levels.map((level: { label: string | number; points: any; }) => ({
-        ...level,
-        points: pointsMap[level.label] ?? level.points,
-      })),
+    const updated = Object.entries(pointsMap).map(([label, points]) => ({
+      label,
+      points,
     }));
-    setCriteriaList(updated);
+    onSave(updated);
     onHide();
+
+    // Show toast with blur effect
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2500);
   };
 
   const handleChange = (label: string, value: number) => {
@@ -43,32 +47,71 @@ const EditPointsModal: React.FC<EditPointsModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Body>
-        <h5 className="fw-bold mb-4">Pre-Defined Points</h5>
-        <Row>
-          {Object.entries(pointsMap).map(([label, points]) => (
-            <Col md={6} key={label} className="mb-3">
-              <Form.Label>{label}</Form.Label>
-              <Form.Control
-                type="number"
-                value={points}
-                onChange={(e) => handleChange(label, Number(e.target.value))}
-              />
-            </Col>
-          ))}
-        </Row>
-        <div className="text-center">
-          <Button
-            onClick={handleUpdate}
-            className="px-5"
-            style={{ backgroundColor: '#ffcc00', color: '#000', border: 'none' }}
-          >
-            Update
-          </Button>
-        </div>
-      </Modal.Body>
-    </Modal>
+    <>
+      <div className={`modal-blur ${show ? 'active' : ''}`}>
+        <Modal
+          show={show}
+          onHide={onHide}
+          centered
+          contentClassName="custom-modal"
+          backdropClassName="custom-backdrop"
+        >
+          <div className="position-relative p-3">
+            <button
+              className="position-absolute top-0 end-0 border-0 bg-transparent fs-4"
+              style={{ padding: '8px', cursor: 'pointer' }}
+              onClick={onHide}
+            >
+              <IoClose />
+            </button>
+
+            <h5 className="fw-bold mb-4" style={{ fontSize: '16px' }}>
+              Pre-Defined Points
+            </h5>
+
+            <div className="points-grid">
+              {Object.entries(pointsMap).map(([label, points]) => (
+                <div className="point-field" key={label}>
+                  <Form.Label className="fw-semibold" style={{ fontSize: '14px' }}>
+                    {label}
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={points}
+                    onChange={(e) => handleChange(label, Number(e.target.value))}
+                    className="custom-input-box"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-4">
+              <Button
+                onClick={handleUpdate}
+                className="px-5"
+                style={{
+                  backgroundColor: '#ffcc00',
+                  color: '#000',
+                  border: 'none',
+                }}
+              >
+                Update
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      </div>
+
+      {/* Toast + Blur Overlay */}
+      {showToast && (
+        <>
+          <div className="toast-blur-overlay"></div>
+          <div className="custom-toast top-right">
+            Successfully Updated Criteria Points...
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

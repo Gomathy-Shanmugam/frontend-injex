@@ -41,10 +41,12 @@ const EditCriteriaModal: React.FC<Props> = ({ show, onHide, criteria, onUpdate }
   return (
     <Modal
       show={show}
-      onHide={onHide}
-      centered
-      size="lg"
-      contentClassName="rounded-4 shadow-sm"
+  onHide={onHide}
+  centered
+  size="lg"
+  contentClassName="rounded-4 shadow-sm"
+  backdropClassName="custom-modal-backdrop" // ✅ Key part
+  backdrop={true}
     >
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="fw-bold" style={{ fontSize: "16px" }}>

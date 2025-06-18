@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Modal, Button, Form, Toast, ToastContainer } from "react-bootstrap";
 
 interface DeleteConfirmModalProps {
@@ -7,7 +7,9 @@ interface DeleteConfirmModalProps {
   onConfirm: () => void;
   removeLinked: boolean;
   setRemoveLinked: (value: boolean) => void;
-  deletedCriteriaTitle: string; // ✨ pass the title to show in toast
+  deletedCriteriaTitle: string;
+  toastVisible: boolean;
+  setToastVisible: (value: boolean) => void;
 }
 
 const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
@@ -17,28 +19,19 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
   removeLinked,
   setRemoveLinked,
   deletedCriteriaTitle,
+  toastVisible,
+  setToastVisible,
 }) => {
-  const [showToast, setShowToast] = useState(false);
-
   const handleConfirm = () => {
-    setShowToast(true);    // show toast first
-    onConfirm();           // trigger deletion logic
-    onHide();              // hide modal afterward
+    onConfirm();
+    setToastVisible(true); // Show toast
+    onHide();              // Close modal
+
+    // Hide toast after 2 seconds
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 2000);
   };
-
-  useEffect(() => {
-    if (show) {
-      const interval = setInterval(() => {
-        const backdrop = document.querySelector(".modal-backdrop");
-        if (backdrop && !backdrop.classList.contains("blur")) {
-          backdrop.classList.add("blur");
-          clearInterval(interval);
-        }
-      }, 50);
-
-      return () => clearInterval(interval);
-    }
-  }, [show]);
 
   return (
     <>
@@ -78,6 +71,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
               variant="warning"
               onClick={handleConfirm}
               style={{ minWidth: "120px", color: "#000" }}
+              disabled={!removeLinked}
             >
               Yes, delete it
             </Button>
@@ -85,20 +79,22 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
         </Modal.Body>
       </Modal>
 
+      {/* ✅ Show Toast & Blur when visible */}
+      {toastVisible && <div className="custom-blur-overlay"></div>}
+
       <ToastContainer
-        position="top-end"
         className="p-3"
         style={{
-          zIndex: 1060,
+          zIndex: 1061,
           position: "fixed",
           top: "20px",
           right: "20px",
         }}
       >
         <Toast
-          onClose={() => setShowToast(false)}
-          show={showToast}
-          delay={3000}
+          onClose={() => setToastVisible(false)}
+          show={toastVisible}
+          delay={2000}
           autohide
           bg="light"
         >

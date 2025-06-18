@@ -809,5 +809,120 @@ body {
   transform: translateZ(0); /* Force GPU rendering for effect */
 }
 
+/* 
+rubric editpointmodl css ---------- */
+/* Two-column responsive layout */
+.points-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 32px; /* vertical x horizontal spacing */
+}
+
+/* Each field */
+.point-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Input box style */
+.custom-input-box {
+  border: 1.5px solid rgba(0, 83, 228, 0.8) !important;
+  border-radius: 10px;
+  font-size: 15px;
+  padding: 10px 16px;
+  width: 100%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.custom-input-box:focus {
+  border-color: rgba(0, 83, 228, 0.8) !important;
+  box-shadow: 0 0 0 4px rgba(0, 83, 228, 0.15);
+  outline: none !important;
+}
+
+/* Button styling */
+.update-btn {
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 40px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Background blur when modal active */
+.modal-blur.active::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(6px);
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1040;
+}
+.custom-toast {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  animation: fadeInOut 2.5s ease-in-out;
+}
+
+/* Toast animation */
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+/* Blur background when toast shows */
+.toast-blur-overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(9px);
+  z-index: 9998;
+}
+
+/* ----------editcriteriamodal ------------ */
+/* index.css or App.css */
+
+.custom-blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px); /* Safari support */
+  
+  z-index: 1045; /* below modal, above rest of content */
+}
+
+
+/* -----------------Deleteconfirmmodal css ---------- */
+.custom-blur-overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.3); /* Optional dark overlay */
+  z-index: 1040;
+}
+
+
+
+
 
 

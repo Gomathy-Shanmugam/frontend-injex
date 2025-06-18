@@ -11,6 +11,11 @@ import NewCriteriaModal from "./NewCriteriaModal";
 import { Toast, ToastContainer } from "react-bootstrap";
 import EditPointsModal from "./EditPointsModal";
 
+type PredefinedPoint = {
+  label: string;
+  points: number;
+};
+
 export type Level = {
   label: string;
   points: number;
@@ -20,7 +25,11 @@ export type Level = {
 export type Criteria = {
   id: number;
   title: string;
-  levels: Level[];
+  levels: {
+    label: string;
+    points: number;
+    description: string;
+  }[];
 };
 
 const initialCriteria: Criteria[] = [
@@ -105,44 +114,123 @@ const RubricEditor: React.FC = () => {
   const [selectedCriteria, setSelectedCriteria] = useState<Criteria | null>(
     null
   );
+  const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
+  const handleShowNewCategory = () => setShowNewCategoryModal(true);
+  const handleHideNewCategory = () => setShowNewCategoryModal(false);
+
   const [editPointsModalShow, setEditPointsModalShow] = useState(false);
+  const [show, setShow] = useState(false);
+  const [toastVisibleAfterDelete, setToastVisibleAfterDelete] = useState(false);
+
+
+
+  const [predefinedPoints, setPredefinedPoints] = useState([
+    { label: "Excellent", points: 11 },
+    { label: "Good", points: 8 },
+    { label: "Needs Improvement", points: 1 },
+  ]);
+  const usedPoints = predefinedPoints.map((p) => p.points);
 
   const handleAddCategory = (
-    label: string,
-    points: number,
+    newLabel: string,
+    newPoint: number,
     descriptions: string[]
   ) => {
-    const existingPoints = new Set(
-      criteriaList.flatMap((c) => c.levels.map((l) => l.points))
+    // 1. Add new point to predefinedPoints
+    setPredefinedPoints((prev) => [
+      ...prev,
+      { label: newLabel, points: newPoint },
+    ]);
+
+    // 2. Add level to each criteria
+    setCriteriaList((prevList) =>
+      prevList.map((criterion, idx) => {
+        const alreadyExists = criterion.levels.some(
+          (level) => level.label === newLabel && level.points === newPoint
+        );
+        if (alreadyExists) return criterion;
+
+        return {
+          ...criterion,
+          levels: [
+            ...criterion.levels,
+            {
+              label: newLabel,
+              points: newPoint,
+              description: descriptions[idx] || "",
+            },
+          ],
+        };
+      })
     );
-    if (existingPoints.has(points)) {
-      alert(
-        "This point value is already used. Please choose a different value."
-      );
-      return;
-    }
-
-    const updated = criteriaList.map((c, index) => {
-      const description = descriptions[index] || "";
-      return {
-        ...c,
-        levels: [...c.levels, { label, points, description }],
-      };
-    });
-
-    setCriteriaList([...updated]);
   };
 
-  const uniquePoints = Array.from(
-    new Set(criteriaList.flatMap((c) => c.levels.map((l) => l.points)))
-  ).sort((a, b) => b - a);
+  const handleSaveEditedPoints = (
+    updatedPoints: { label: string; points: number }[]
+  ) => {
+    setPredefinedPoints(updatedPoints);
 
-  const handleEditCriteria = (id: number) => {
-    const toEdit = criteriaList.find((c) => c.id === id);
-    if (toEdit) {
-      setSelectedCriteria(toEdit);
-      setEditModalShow(true);
-    }
+    // Update points inside criteriaList
+    setCriteriaList((prevList) =>
+      prevList.map((criterion) => ({
+        ...criterion,
+        levels: criterion.levels.map((level) => {
+          const updated = updatedPoints.find((p) => p.label === level.label);
+          return updated ? { ...level, points: updated.points } : level;
+        }),
+      }))
+    );
+  };
+
+  const handleEditPredefinedPoint = (
+    oldLabel: string,
+    newLabel: string,
+    newPoints: number
+  ) => {
+    // 1. Update predefined points
+    setPredefinedPoints((prev) =>
+      prev.map((p) =>
+        p.label === oldLabel ? { label: newLabel, points: newPoints } : p
+      )
+    );
+
+    // 2. Update criteriaList
+    setCriteriaList((prevList) =>
+      prevList.map((criterion) => {
+        const updatedLevels = criterion.levels.map((level) => {
+          if (level.label === oldLabel) {
+            return {
+              ...level,
+              label: newLabel,
+              points: newPoints,
+            };
+          }
+          return level;
+        });
+
+        const alreadyHasNewCombo = updatedLevels.some(
+          (l) => l.label === newLabel && l.points === newPoints
+        );
+
+        // OPTIONAL: fallback description (can be blank or reuse from old)
+        const fallbackDesc =
+          criterion.levels.find((l) => l.label === oldLabel)?.description || "";
+
+        return {
+          ...criterion,
+          levels: alreadyHasNewCombo
+            ? updatedLevels
+            : [
+                ...updatedLevels,
+                {
+                  label: newLabel,
+                  points: newPoints,
+                  description: fallbackDesc, // or ""
+                },
+              ],
+        };
+      })
+    );
   };
 
   const handleUpdateCriteria = (updated: Criteria) => {
@@ -178,6 +266,22 @@ const RubricEditor: React.FC = () => {
     setCriteriaList((prev) => [...prev, newCriteria]);
     setCriteriaModalShow(false);
   };
+
+  const uniquePoints = Array.from(
+    new Set(predefinedPoints.map((p) => p.points))
+  ).sort((a, b) => b - a);
+
+  const resolvedColumns = uniquePoints.map((pt) => {
+    const match = predefinedPoints.find((p) => p.points === pt);
+    return {
+      points: pt,
+      label: match?.label || `Custom (${pt})`,
+    };
+  });
+
+  function handleHide(): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <>
@@ -218,7 +322,7 @@ const RubricEditor: React.FC = () => {
                 <Button
                   variant="outline-dark"
                   size="sm"
-                  onClick={() => setModalShow(true)}
+                  onClick={handleShowNewCategory}
                   style={{
                     fontSize: "14px",
                     marginLeft: "auto",
@@ -229,47 +333,111 @@ const RubricEditor: React.FC = () => {
               </div>
             </div>
 
-            <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+            <div
+              style={{
+                overflowX: "auto",
+                width: "100%",
+                paddingRight: "180px",
+              }}
+            >
               <div
                 style={{
-                  minWidth: `${uniquePoints.length * 220 + 160}px`,
+                  minWidth: `${resolvedColumns.length * 200 + 360}px`,
+
+                  // Force table wider
                 }}
               >
-                <Table bordered hover style={{ fontSize: "14px" }}>
-                  <thead className="table-light">
+                <Table
+                  bordered
+                  hover
+                  style={{ fontSize: "14px", marginBottom: 0 }}
+                >
+                  {/* <thead className="table-light">
                     <tr>
                       <th style={{ fontSize: "16px" }}>Criteria</th>
 
-                      {uniquePoints.map((pt) => {
-                        const label =
-                          criteriaList[0].levels.find((l) => l.points === pt)
-                            ?.label || "";
-                        return (
-                          <th
-                            key={pt}
-                            className="text-center"
-                            style={{
-                              minWidth: "200px",
-                              maxWidth: "200px",
-                              width: "200px",
-                              whiteSpace: "normal",
-                              fontSize: "14px",
-                            }}
+                      {resolvedColumns.map((point) => (
+                        <th
+                          key={point.points}
+                          className="text-center"
+                          style={{
+                            minWidth: "200px",
+                            maxWidth: "200px",
+                            width: "200px",
+                            whiteSpace: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          <div
+                            className="fw-bold d-flex justify-content-center align-items-center gap-2"
+                            style={{ fontSize: "16px" }}
                           >
-                            <div
-                              className="fw-bold d-flex justify-content-center align-items-center gap-2"
-                              style={{ fontSize: "16px" }}
-                            >
-                              {label}
-                            </div>
-                            <div>{pt} pts</div>
-                          </th>
-                        );
-                      })}
+                            {point.label}
+                          </div>
+                          <div>{point.points} pts</div>
+                        </th>
+                      ))}
 
                       <th
+  style={{
+    minWidth: "160px",
+    maxWidth: "160px",
+    width: "160px",
+    textAlign: "center",
+    fontSize: "14px",
+     // optional, for subtle effect
+  }}
+>
+
+                        <div className="d-flex justify-content-center align-items-center gap-2">
+                          <span className="fw-bold">Actions</span>
+                          <FaEdit
+                            style={{
+                              cursor: "pointer",
+                              fontSize: "16px",
+                              color: "#0d6efd",
+                            }}
+                            onClick={() => setEditPointsModalShow(true)}
+                            title="Edit Predefined Points"
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  </thead> */}
+                  <thead className="table-light">
+                    <tr>
+                      {/* First Column: Criteria Title */}
+                      <th style={{ fontSize: "16px" }}>Criteria</th>
+
+                      {/* Dynamic Columns for Each Predefined Point */}
+                      {resolvedColumns.map((point) => (
+                        <th
+                          key={point.points}
+                          className="text-center"
+                          style={{
+                            minWidth: "200px",
+                            maxWidth: "200px",
+                            width: "200px",
+                            whiteSpace: "normal",
+                            fontSize: "14px",
+                          }}
+                        >
+                          <div
+                            className="fw-bold d-flex justify-content-center align-items-center gap-2"
+                            style={{ fontSize: "16px" }}
+                          >
+                            {point.label}
+                          </div>
+                          <div>{point.points} pts</div>
+                        </th>
+                      ))}
+
+                      {/* Final Column: Actions with Edit Icon */}
+                      <th
                         style={{
-                          width: "100px",
+                          minWidth: "160px",
+                          maxWidth: "160px",
+                          width: "160px",
                           textAlign: "center",
                           fontSize: "14px",
                         }}
@@ -295,26 +463,39 @@ const RubricEditor: React.FC = () => {
                       <tr key={criterion.id}>
                         <td
                           className="fw-semibold"
-                          style={{ fontSize: "14px" }}
+                          style={{
+                            fontSize: "14px",
+                            minWidth: "160px",
+                            maxWidth: "160px",
+                            width: "160px",
+                            wordWrap: "break-word",
+                            whiteSpace: "normal",
+                          }}
                         >
                           {criterion.title}
                         </td>
-                        {uniquePoints.map((pt) => {
+
+                        {resolvedColumns.map((pt) => {
+                          //                           const level = criterion.levels.find(
+                          //   (l) => l.points === pt.points && l.label === pt.label
+                          // );
                           const level = criterion.levels.find(
-                            (l) => l.points === pt
+                            (l) => l.label === pt.label
                           );
+
                           return (
                             <td
-                              key={pt}
+                              key={pt.points}
                               style={{
                                 minWidth: "200px",
                                 maxWidth: "200px",
                                 width: "200px",
                                 whiteSpace: "normal",
                                 fontSize: "14px",
+                                verticalAlign: "top", // helps visually align content
                               }}
                             >
-                              {level ? (
+                              {level?.description ? (
                                 level.description
                               ) : (
                                 <span className="text-muted">—</span>
@@ -322,14 +503,24 @@ const RubricEditor: React.FC = () => {
                             </td>
                           );
                         })}
+
                         <td
                           className="text-center"
-                          style={{ width: "180px", whiteSpace: "normal" }}
+                          style={{
+                            width: "160px",
+                            minWidth: "160px",
+                            maxWidth: "160px",
+                          }}
                         >
                           <FaEdit
                             className="me-2 text-primary"
                             style={{ cursor: "pointer", fontSize: "16px" }}
-                            onClick={() => handleEditCriteria(criterion.id)}
+                            onClick={() => {
+                              setSelectedCriteria(criterion); // set the current criterion
+                              setEditModalShow(true); // then open the modal
+                            }}
+
+                            // onClick={() => setEditPointsModalShow(true)}
                           />
                           <FaTrash
                             className="text-danger"
@@ -357,27 +548,38 @@ const RubricEditor: React.FC = () => {
       </div>
 
       <NewCategoryModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+        show={showNewCategoryModal}
+        onHide={handleHideNewCategory}
         onAddCategory={handleAddCategory}
-        existingPoints={criteriaList.flatMap((c) =>
-          c.levels.map((l) => l.points)
-        )}
+        existingPoints={usedPoints}
         criteriaCount={criteriaList.length}
+        predefinedPoints={[
+          { label: "Excellent", points: 11 },
+          { label: "Good", points: 8 },
+          { label: "Need Improvement", points: 1 },
+        ]}
+        setPredefinedPoints={setPredefinedPoints}
       />
+
+{editModalShow && <div className="custom-blur-overlay"></div>}
       <EditCriteriaModal
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
         criteria={selectedCriteria}
         onUpdate={handleUpdateCriteria}
       />
+
+    
+{(deleteModalShow || toastVisibleAfterDelete) && <div className="custom-blur-overlay"></div>}
       <DeleteConfirmModal
         show={deleteModalShow}
         onHide={() => setDeleteModalShow(false)}
         onConfirm={confirmDelete}
         removeLinked={removeLinked}
         setRemoveLinked={setRemoveLinked}
-        deletedCriteriaTitle={deletedCriteriaTitle} // ✅ Fix applied here
+        deletedCriteriaTitle={deletedCriteriaTitle} 
+        toastVisible={toastVisibleAfterDelete} // ✅ Pass this
+  setToastVisible={setToastVisibleAfterDelete}// ✅ Fix applied here
       />
 
       <NewCriteriaModal
@@ -409,9 +611,8 @@ const RubricEditor: React.FC = () => {
       <EditPointsModal
         show={editPointsModalShow}
         onHide={() => setEditPointsModalShow(false)}
-        uniquePoints={uniquePoints}
-        setCriteriaList={setCriteriaList}
-        criteriaList={criteriaList}
+        predefinedPoints={predefinedPoints}
+        onSave={handleSaveEditedPoints}
       />
     </>
   );
