@@ -6,6 +6,7 @@ import "pdfjs-dist/build/pdf.worker.entry";
 import logoImageSrc from "../assets/injex-bglogo.png";
 import FullScreenFlipbook from "./FullScreenFlipbook";
 
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 const FlipBookUploader: React.FC = () => {

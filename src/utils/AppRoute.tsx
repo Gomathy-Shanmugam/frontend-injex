@@ -4,6 +4,7 @@ import Grade from "../Components/Grade/Grade";
 
 import FlipBookUploader from "../Components/FlipBookUploader";
 import RubricEditor from "../Components/Rubrics/RubricEditor";
+import CurriculumCourse from "../Components/FacultyDashboard.tsx/CurriculumCourse";
 
 
 
@@ -26,6 +27,11 @@ const AppRoute: RouteObject[] = [
    {
     path: "/rubric",
     element: <RubricEditor/>
+    
+  },
+    {
+    path: "/curriculum",
+    element: <CurriculumCourse/>
     
   }
 ]

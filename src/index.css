@@ -922,7 +922,29 @@ rubric editpointmodl css ---------- */
 }
 
 
+/* ---------------------------newcategorymodal css --------- */
 
+/* 1. Input box consistent styling */
+.custom-modal input.form-control {
+  font-size: 14px !important;
+  height: 36px !important;
+  border: 1px solid #6ea8fe; /* soft blue */
+  box-shadow: 0 1px 4px rgba(110, 168, 254, 0.2); /* subtle blue shadow */
+  border-radius: 6px;
+}
+
+/* 2. Optional: consistent focus effect */
+.custom-modal input.form-control:focus {
+  border-color: #529ff8;
+  box-shadow: 0 0 0 3px rgba(82, 159, 248, 0.3);
+}
+
+/* 3. Blur background when modal appears */
+.modal-backdrop.show {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: backdrop-filter 0.3s ease;
+}
 
 
 

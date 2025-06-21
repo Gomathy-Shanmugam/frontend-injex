@@ -51,30 +51,56 @@ const NewCategoryModal: React.FC<Props> = ({
   JSON.parse(JSON.stringify(predefinedPoints)) // deep copy to avoid mutation
 );
  
-  const validatePoints = (
-    val: number,
-    latestPredefined: { label: string; points: number }[] = predefinedPoints
-  ): string | null => {
-    if (val < 1 || val > 11) {
-      return "Points must be between 1 and 11.";
-    }
+  // const validatePoints = (
+  //   val: number,
+  //   latestPredefined: { label: string; points: number }[] = predefinedPoints
+  // ): string | null => {
+  //   if (val < 1 || val > 11) {
+  //     return "Points must be between 1 and 11.";
+  //   }
 
-    const used = Array.from(
-      new Set([...latestPredefined.map((p) => p.points), ...existingPoints])
-    );
+  //   const used = Array.from(
+  //     new Set([...latestPredefined.map((p) => p.points), ...existingPoints])
+  //   );
 
-    if (used.includes(val)) {
-      return `This point value (${val}) is already used. Please choose a different value.`;
-    }
+  //   if (used.includes(val)) {
+  //     return `This point value (${val}) is already used. Please choose a different value.`;
+  //   }
 
-    return null;
-  };
+  //   return null;
+  // };
 
-  const handlePointsChange = (val: number) => {
-    setPoints(val);
-    const validation = validatePoints(val, predefinedPoints);
-    setCategoryError(validation);
-  };
+const validatePoints = (
+  val: number,
+  latestPredefined: { label: string; points: number }[] = predefinedPoints
+): string | null => {
+  const used = Array.from(new Set(latestPredefined.map((p) => p.points)));
+
+  console.log("✅ CLEAN VALIDATION DEBUG", {
+    input: val,
+    usedPoints: used,
+  });
+
+  if (val < 1 || val > 11) {
+    return "Points must be between 1 and 11.";
+  }
+
+  if (used.includes(val)) {
+    return `This point value (${val}) is already used.`;
+  }
+
+  return null;
+};
+
+
+
+ const handlePointsChange = (val: number) => {
+  setPoints(val);
+  const validation = validatePoints(val, localPredefined); // ✅ FIXED
+  setCategoryError(validation);
+};
+
+
 
 const handlePredefinedChange = (index: number, newValue: number) => {
   if (!predefinedPoints[index]) return; // guard against undefined index
@@ -108,32 +134,34 @@ const handlePredefinedChange = (index: number, newValue: number) => {
 };
 
 
-
-
- const handleSubmit = () => {
+const handleSubmit = () => {
   if (categoryError || predefinedError) return;
 
-  const validation = validatePoints(points, predefinedPoints);
+  const validation = validatePoints(points, localPredefined); // ✅ FIXED
   if (validation) {
     setCategoryError(validation);
     return;
   }
 
-  // Call onAddCategory with correct arguments
   onAddCategory(label, points, descriptions);
+  setPredefinedPoints(localPredefined); // Optional: update parent
 
-  // Reset form
+
+
+  // Reset
   setLabel("");
   setPoints(0);
-  setDescriptions(Array(predefinedPoints.length).fill(""));
+  setDescriptions(Array(criteriaCount).fill(""));
   setCategoryError(null);
   setPredefinedError(null);
   onHide();
 };
 
 
+
+
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered className="custom-modal">
       <Modal.Header closeButton>
         <Modal.Title style={{ fontSize: "16px" }}>New Category</Modal.Title>
       </Modal.Header>
