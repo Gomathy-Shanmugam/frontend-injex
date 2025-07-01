@@ -947,4 +947,42 @@ rubric editpointmodl css ---------- */
 }
 
 
+/* --------------curriculum video file ------------- */
+.video-preview-container {
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.video-placeholder {
+  border-radius: 0 !important;
+  background-color: #f9f9f9 !important; /* Or match your page */
+  padding: 0 !important;
+}
+
+.video-preview-item,
+.preview-video-player {
+  border-radius: 0 !important;
+}
+
+
+.lesson-popup-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: unset;         /* remove fixed 400px if not needed */
+  padding: 20px 30px;
+}
+
+
+.lesson-popup {
+  height: 95vh;              /* Instead of max-height */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
 

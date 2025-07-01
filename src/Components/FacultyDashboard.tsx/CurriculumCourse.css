@@ -1286,29 +1286,7 @@ input:checked + .author-slider:before {
   font-weight: 500;
 }
 
-.fullscreen-flipbook {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
 
-.fullscreen-flipbook:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.flipbook-placeholder {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .placeholder-content {
   text-align: center;

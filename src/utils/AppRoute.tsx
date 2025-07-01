@@ -2,7 +2,7 @@ import type { RouteObject } from "react-router-dom";
 import Home from "../Components/Home/Home";
 import Grade from "../Components/Grade/Grade";
 
-import FlipBookUploader from "../Components/FlipBookUploader";
+import FlipBookUploader from "../Components/FacultyDashboard.tsx/FlipBookUploader";
 import RubricEditor from "../Components/Rubrics/RubricEditor";
 import CurriculumCourse from "../Components/FacultyDashboard.tsx/CurriculumCourse";
 
