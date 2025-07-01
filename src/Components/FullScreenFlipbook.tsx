@@ -12,11 +12,9 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Initialize audio
     audioRef.current = new Audio("/page-flip-4.mp3");
     audioRef.current.load();
 
-    // Escape key closes flipbook
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -27,9 +25,7 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
   const playFlipSound = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {
-        // Ignore play errors (e.g. user hasn't interacted yet)
-      });
+      audioRef.current.play().catch(() => {});
     }
   };
 
@@ -51,7 +47,7 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
   const pageStyle: React.CSSProperties = {
     height: "100%",
     width: "100%",
-    padding: "60px 40px 40px 40px",
+    padding: "24px",
     boxSizing: "border-box",
     overflow: "hidden",
     display: "flex",
@@ -70,8 +66,8 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
     border: "none",
     borderRadius: "50%",
     cursor: "pointer",
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -80,7 +76,6 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
 
   return ReactDOM.createPortal(
     <div style={containerStyle}>
-      {/* Close button */}
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -90,8 +85,8 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
           position: "absolute",
           top: 20,
           right: 30,
-          padding: "10px 15px",
-          fontSize: 16,
+          padding: "6px 10px",
+          fontSize: 14,
           background: "#fff",
           border: "none",
           borderRadius: 5,
@@ -103,24 +98,16 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
         Close ✕
       </button>
 
-      {/* Left Arrow */}
       <button
-        onClick={() => {
-          bookRef.current?.pageFlip().flipPrev();
-          
-        }}
+        onClick={() => bookRef.current?.pageFlip().flipPrev()}
         style={{ ...arrowStyle, left: 20 }}
         aria-label="Previous Page"
       >
         ‹
       </button>
 
-      {/* Right Arrow */}
       <button
-        onClick={() => {
-          bookRef.current?.pageFlip().flipNext();
-          
-        }}
+        onClick={() => bookRef.current?.pageFlip().flipNext()}
         style={{ ...arrowStyle, right: 20 }}
         aria-label="Next Page"
       >
@@ -129,11 +116,11 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
 
       <HTMLFlipBook
         ref={bookRef}
-        width={1000}
-        height={window.innerHeight - 80}
+        width={840}
+        height={window.innerHeight - 140}
         size="stretch"
         minWidth={300}
-        maxWidth={2000}
+        maxWidth={1600}
         minHeight={300}
         maxHeight={2000}
         showCover={true}
@@ -155,9 +142,10 @@ const FullScreenFlipbook: React.FC<Props> = ({ pages, onClose }) => {
           width: "100%",
           height: "auto",
           maxHeight: "100%",
-          overflow: "visible",
+          overflow: "hidden",
+          background: "#f0f0f0",
         }}
-        onFlip={playFlipSound} // Play sound when flip happens (e.g., drag, click corners)
+        onFlip={playFlipSound}
       >
         {pages.map((page, i) => (
           <div key={i} style={pageStyle}>

@@ -6,16 +6,52 @@ import "pdfjs-dist/build/pdf.worker.entry";
 import logoImageSrc from "../assets/injex-bglogo.png";
 import FullScreenFlipbook from "./FullScreenFlipbook";
 
-
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 const FlipBookUploader: React.FC = () => {
+  // Flipbook states
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [pdfPages, setPdfPages] = useState<JSX.Element[]>([]);
-  const [hours, setHours] = useState("");
-  const [mins, setMins] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [flipbookHours, setFlipbookHours] = useState("");
+  const [flipbookMins, setFlipbookMins] = useState("");
+  const flipbookInputRef = useRef<HTMLInputElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [flipbookFileName, setFlipbookFileName] = useState("");
+  const [uploadedFileName, setUploadedFileName] = useState<string>("");
+  const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
+const [uploadedVideoFileName, setUploadedVideoFileName] = useState("");
+
+
+  // Video states
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  // const [uploadedVideos, setUploadedVideos] = useState<Array<{ url: string; name: string }>>([]);
+  const [uploadedVideos, setUploadedVideos] = useState<
+    { url: string; name: string; duration: number }[]
+  >([]);
+
+  const [videoHours, setVideoHours] = useState("0");
+  const [videoMins, setVideoMins] = useState("0");
+  const [videoSecs, setVideoSecs] = useState("0");
+
+  const [uploadError, setUploadError] = useState("");
+
+  // Flipbook handlers
+  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+
+  //   if (
+  //     file.type === "application/pdf" ||
+  //     file.name.toLowerCase().endsWith(".pdf")
+  //   ) {
+  //     const url = URL.createObjectURL(file);
+  //     setFileUrl(url);
+  //     renderPdfPages(url);
+  //   } else {
+  //     alert("Only PDF files are supported for flipbook preview.");
+  //   }
+  // };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,6 +63,7 @@ const FlipBookUploader: React.FC = () => {
     ) {
       const url = URL.createObjectURL(file);
       setFileUrl(url);
+      setUploadedFileName(file.name); // ✅ set the file name
       renderPdfPages(url);
     } else {
       alert("Only PDF files are supported for flipbook preview.");
@@ -38,7 +75,6 @@ const FlipBookUploader: React.FC = () => {
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
-    // Load logo image from imported source
     const loadLogo = (): Promise<HTMLImageElement> =>
       new Promise((resolve, reject) => {
         const img = new Image();
@@ -55,21 +91,16 @@ const FlipBookUploader: React.FC = () => {
 
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d")!;
-     canvas.height = viewport.height;
-canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
 
-
-
-      // Render PDF page
       await page.render({ canvasContext: context, viewport }).promise;
 
-      // Draw logo top-left with minimal vertical space
       const logoWidth = 80;
       const logoHeight = (logoImage.height / logoImage.width) * logoWidth;
-      const topMargin = 1; // shrink vertical spacing
+      const topMargin = 1;
       context.drawImage(logoImage, 10, topMargin, logoWidth, logoHeight);
 
-      // Page number at the bottom
       context.font = "16px Arial";
       context.fillStyle = "#333";
       context.textAlign = "center";
@@ -85,12 +116,12 @@ canvas.width = viewport.width;
             src={canvas.toDataURL()}
             alt={`Page ${index + 1}`}
             style={{
-        width: "100%",
-        height: "auto",
-        objectFit: "contain",
-        padding: "10px",
-        boxSizing: "border-box",
-      }}
+              width: "100%",
+              height: "auto",
+              objectFit: "contain",
+              padding: "10px",
+              boxSizing: "border-box",
+            }}
           />
         </div>
       );
@@ -100,8 +131,152 @@ canvas.width = viewport.width;
     setPdfPages(pages);
   };
 
-  const handleSave = () => {
-    console.log("Saving...", { fileUrl, hours, mins });
+  const handleSaveFlipbook = () => {
+    console.log("Saving flipbook...", {
+      fileUrl,
+      hours: flipbookHours,
+      mins: flipbookMins,
+    });
+    setShowSuccessModal(true);
+    
+  };
+
+  // Video handlers
+  // const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = e.target.files;
+  //   if (!files || files.length === 0) return;
+
+  //   const newVideos: Array<{ url: string; name: string }> = [];
+  //   let hasError = false;
+
+  //   Array.from(files).forEach((file) => {
+  //     if (!file.type.startsWith("video/") && !file.name.toLowerCase().match(/\.(mp4|mpeg|mov|avi|webm)$/)) {
+  //       setUploadError("Only video files (MP4, MPEG, MOV, AVI, WEBM) are supported");
+  //       hasError = true;
+  //       return;
+  //     }
+
+  //     if (file.size > 100 * 1024 * 1024) {
+  //       setUploadError("File size exceeds 100MB limit");
+  //       hasError = true;
+  //       return;
+  //     }
+
+  //     const url = URL.createObjectURL(file);
+  //     newVideos.push({
+  //       url,
+  //       name: file.name,
+  //     });
+  //   });
+
+  //   if (!hasError) {
+  //     setUploadError("");
+  //     setUploadedVideos((prev) => [...prev, ...newVideos]);
+  //   }
+  // };
+
+  const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach((file) => {
+      const url = URL.createObjectURL(file);
+      const videoElement = document.createElement("video");
+
+      videoElement.preload = "metadata";
+      videoElement.src = url;
+
+      videoElement.onloadedmetadata = () => {
+        const durationInSeconds = Math.floor(videoElement.duration);
+
+        const hours = Math.floor(durationInSeconds / 3600);
+        const minutes = Math.floor((durationInSeconds % 3600) / 60);
+        const seconds = durationInSeconds % 60;
+
+        setVideoHours(hours.toString());
+        setVideoMins(minutes.toString());
+        setVideoSecs(seconds.toString());
+
+        setUploadedVideos((prev) => [
+          ...prev,
+          {
+            url,
+            name: file.name,
+            duration: durationInSeconds,
+          },
+        ]);
+      };
+    });
+  };
+
+  const handleSaveVideos = () => {
+    console.log("Saving videos...", {
+      files: uploadedVideos,
+      hours: videoHours,
+      mins: videoMins,
+    });
+    // Set filename for the modal display
+  setUploadedVideoFileName(uploadedVideos[0].name);
+
+  // Show modal
+  setShowVideoSuccessModal(true);
+  };
+
+  const handleRemoveVideo = (indexToRemove: number) => {
+    setUploadedVideos((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
+
+  };
+
+  const playVideoFullscreen = (videoUrl: string) => {
+    const videoElement = document.createElement("video");
+    videoElement.src = videoUrl;
+    videoElement.controls = true;
+    videoElement.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      z-index: 9999;
+      object-fit: contain;
+    `;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.innerHTML = "×";
+    closeBtn.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: none;
+      font-size: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10000;
+    `;
+
+    const cleanup = () => {
+      if (document.body.contains(videoElement)) {
+        videoElement.pause();
+        document.body.removeChild(videoElement);
+      }
+      if (document.body.contains(closeBtn)) {
+        document.body.removeChild(closeBtn);
+      }
+    };
+
+    closeBtn.onclick = cleanup;
+    videoElement.addEventListener("ended", cleanup);
+
+    document.body.appendChild(videoElement);
+    document.body.appendChild(closeBtn);
+    videoElement.play().catch(console.error);
   };
 
   return (
@@ -118,6 +293,55 @@ canvas.width = viewport.width;
         }}
       >
         <Tabs defaultActiveKey="flipbook" className="mb-3">
+          {showSuccessModal && (
+            <div
+              className="modal fade show d-block"
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              <div className="modal-dialog modal-dialog-centered">
+                <div
+                  className="modal-content text-center p-4"
+                  style={{
+                    borderRadius: "16px",
+                    width: "320px", // reduce modal width
+                    margin: "0 auto",
+                  }}
+                >
+                  <h5 className="mb-3 fw-semibold">Successfully Created</h5>
+
+                  <div className="mb-3 d-flex align-items-center justify-content-center">
+                    <i className="bi bi-journal-text fs-5 me-2"></i>
+                    <a
+                      href="#"
+                      className="text-primary text-decoration-none"
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      Lesson : {uploadedFileName || "Flip book"}
+                    </a>
+                  </div>
+
+                  <div className="d-flex justify-content-center">
+                    <button
+                      className="btn btn-warning fw-bold"
+                      style={{
+                        minWidth: "80px",
+                        padding: "6px 16px",
+                        fontSize: "0.85rem",
+                        color: "#000",
+                      }}
+                      onClick={() => setShowSuccessModal(false)}
+                    >
+                      OK
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Tab eventKey="flipbook" title="Flip Book">
             <div className="row">
               {/* Upload Section */}
@@ -131,13 +355,13 @@ canvas.width = viewport.width;
                     textAlign: "center",
                     cursor: "pointer",
                   }}
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => flipbookInputRef.current?.click()}
                 >
                   <Form.Control
                     type="file"
                     accept=".pdf"
                     onChange={handleFileUpload}
-                    ref={fileInputRef}
+                    ref={flipbookInputRef}
                     hidden
                   />
                   <div className="text-muted small">Upload PDF / Word</div>
@@ -155,15 +379,15 @@ canvas.width = viewport.width;
                       placeholder="Hrs"
                       className="me-2"
                       style={{ fontSize: "0.85rem" }}
-                      value={hours}
-                      onChange={(e) => setHours(e.target.value)}
+                      value={flipbookHours}
+                      onChange={(e) => setFlipbookHours(e.target.value)}
                     />
                     <Form.Control
                       type="number"
                       placeholder="Mins"
                       style={{ fontSize: "0.85rem" }}
-                      value={mins}
-                      onChange={(e) => setMins(e.target.value)}
+                      value={flipbookMins}
+                      onChange={(e) => setFlipbookMins(e.target.value)}
                     />
                   </div>
                 </div>
@@ -177,13 +401,12 @@ canvas.width = viewport.width;
                     fontSize: "0.85rem",
                     padding: "6px 12px",
                   }}
-                  onClick={handleSave}
+                  onClick={handleSaveFlipbook}
                 >
                   Save
                 </Button>
               </div>
 
-              {/* Preview Section */}
               {/* Preview Section */}
               <div className="col-md-8 d-flex flex-column align-items-center">
                 <div className="mb-2" style={{ fontSize: "0.9rem" }}>
@@ -201,30 +424,29 @@ canvas.width = viewport.width;
                     }}
                   >
                     <HTMLFlipBook
-                      width={600}
-                      height={600}
+                      width={850}
+                      height={700}
                       size="stretch"
                       minWidth={100}
-                       
                       maxWidth={600}
                       minHeight={150}
                       maxHeight={800}
                       showCover={true}
                       mobileScrollSupport={true}
-                      flippingTime={600} // Valid flipping time
+                      flippingTime={600}
                       className="flip-book"
                       style={{ boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}
                       startPage={0}
-                      drawShadow={true}
-                      usePortrait={true}
-                      autoSize={true}
-                      maxShadowOpacity={0.5}
-                      disableFlipByClick={false}
+                      drawShadow={false}
+                      usePortrait={false}
                       startZIndex={0}
+                      autoSize={false}
+                      maxShadowOpacity={0}
                       clickEventForward={false}
-                      useMouseEvents={true}
-                      swipeDistance={30} // > 0 to enable swipe
+                      useMouseEvents={false}
+                      swipeDistance={0}
                       showPageCorners={false}
+                      disableFlipByClick={false}
                     >
                       {pdfPages}
                     </HTMLFlipBook>
@@ -241,11 +463,296 @@ canvas.width = viewport.width;
               </div>
             </div>
           </Tab>
+
           <Tab eventKey="video" title="Video Files">
-            <div className="text-center text-muted p-3 small">
-              Video upload coming soon...
+            <div className="video-files-content">
+              <div className="video-upload-section">
+                <h3>Upload Files</h3>
+
+                <div
+                  className="video-upload-zone"
+                  onClick={() => videoInputRef.current?.click()}
+                >
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <p>Upload MP4, MPEG</p>
+                  <small>Maximum upload size limit of 100 MB</small>
+                  {uploadError && (
+                    <div className="text-danger small mt-2">{uploadError}</div>
+                  )}
+                </div>
+
+                <input
+                  type="file"
+                  accept="video/*"
+                  onChange={handleVideoUpload}
+                  ref={videoInputRef}
+                  style={{ display: "none" }}
+                  multiple
+                />
+
+                <div className="lesson-duration mt-4">
+                  <h4>Lesson Duration</h4>
+                  <div className="duration-inputs d-flex gap-4 text-center">
+                    <div>
+                      <Form.Control
+                        type="number"
+                        placeholder="Hours"
+                        value={videoHours}
+                        readOnly
+                        style={{
+                          width: "100px",
+                          backgroundColor: "#f9f9f9",
+                          cursor: "not-allowed",
+                        }}
+                      />
+                      <div className="small mt-1">Hour</div>
+                    </div>
+                    <div>
+                      <Form.Control
+                        type="number"
+                        placeholder="Mins"
+                        value={videoMins}
+                        readOnly
+                        style={{
+                          width: "100px",
+                          backgroundColor: "#f9f9f9",
+                          cursor: "not-allowed",
+                        }}
+                      />
+                      <div className="small mt-1">Min</div>
+                    </div>
+                    <div>
+                      <Form.Control
+                        type="number"
+                        placeholder="Secs"
+                        value={videoSecs}
+                        readOnly
+                        style={{
+                          width: "100px",
+                          backgroundColor: "#f9f9f9",
+                          cursor: "not-allowed",
+                        }}
+                      />
+                      <div className="small mt-1">Sec</div>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  variant="warning"
+                  className="mt-3"
+                  onClick={handleSaveVideos}
+                  disabled={uploadedVideos.length === 0}
+                  style={{
+                    fontWeight: "bold",
+                    color: "black",
+                    padding: "8px 16px",
+                  }}
+                >
+                  Save
+                </Button>
+              </div>
+              <div className="video-preview-section mt-4">
+                <h3>Preview</h3>
+                <div className="video-preview-container">
+                  {uploadedVideos.length > 0 ? (
+                    <div className="uploaded-videos-list">
+                      {uploadedVideos.map((video, index) => {
+                        const hours = Math.floor(video.duration / 3600);
+                        const minutes = Math.floor(
+                          (video.duration % 3600) / 60
+                        );
+                        const seconds = video.duration % 60;
+
+                        return (
+                          <div
+                            key={index}
+                            className="video-preview-item mb-4 text-center"
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              border: "1px solid #ddd",
+                              borderRadius: "8px",
+                              padding: "12px",
+                              position: "relative",
+                            }}
+                          >
+                            {/* ❌ Close Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveVideo(index);
+                              }}
+                              style={{
+                                position: "absolute",
+                                top: "8px",
+                                right: "12px",
+                                background: "transparent",
+                                border: "none",
+                                fontSize: "20px",
+                                fontWeight: "bold",
+                                cursor: "pointer",
+                                color: "#999",
+                                zIndex: 2,
+                              }}
+                              aria-label="Remove video"
+                              title="Remove"
+                            >
+                              ×
+                            </button>
+
+                            {/* Video Container with Click Overlay */}
+                            <div
+                              style={{
+                                width: "100%",
+                                height: "200px",
+                                position: "relative",
+                                borderRadius: "8px",
+                                overflow: "hidden",
+                              }}
+                            >
+                              {/* Video Player */}
+                              <video
+                                className="preview-video-player"
+                                controls
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "contain",
+                                  backgroundColor: "#000",
+                                }}
+                              >
+                                <source src={video.url} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+
+                              {/* Fullscreen Click Overlay */}
+                              <div
+                                onClick={() => playVideoFullscreen(video.url)}
+                                style={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  width: "100%",
+                                  height: "100%",
+                                  backgroundColor: "transparent",
+                                  cursor: "pointer",
+                                  zIndex: 1,
+                                }}
+                              />
+                            </div>
+
+                            {/* Info */}
+                            <div className="video-info mt-2 text-center">
+                              <div className="video-name fw-semibold">
+                                {video.name}
+                              </div>
+                              <div className="video-duration text-muted small">
+                                Duration: {hours}h {minutes}m {seconds}s
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="video-placeholder text-center py-4">
+                      <div className="placeholder-image">
+                        <svg
+                          width="100"
+                          height="100"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                        >
+                          <rect
+                            x="2"
+                            y="3"
+                            width="20"
+                            height="14"
+                            rx="2"
+                            ry="2"
+                          />
+                          <line x1="8" y1="21" x2="16" y2="21" />
+                          <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                        <p className="mt-2">No video uploaded</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </Tab>
+
+     {showVideoSuccessModal && (
+  <div
+    className="modal fade show d-block"
+    style={{
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      zIndex: 1050,
+    }}
+  >
+    <div className="modal-dialog modal-dialog-centered" style={{ zIndex: 1060 }}>
+      <div
+        className="modal-content text-center px-4 py-3"
+        style={{
+          borderRadius: "16px",
+          maxWidth: "400px",
+          margin: "0 auto",
+        }}
+      >
+        <h5 className="mb-3 fw-semibold">Successfully Created</h5>
+
+        <div className="mb-3 d-flex align-items-center justify-content-center">
+          <i className="bi bi-journal-text fs-4"></i>
+          <span
+            className="ms-2 text-primary text-decoration-none"
+            style={{ fontSize: "0.95rem" }}
+          >
+            Lesson : {uploadedVideoFileName || "Video Lesson"}
+          </span>
+        </div>
+
+        {/* ✅ Button Centered with reduced width */}
+        <div className="d-flex justify-content-center">
+          <button
+            className="btn btn-warning fw-bold"
+            style={{
+              padding: "6px 30px", // reduced width via padding
+              fontSize: "0.85rem",
+            }}
+            onClick={() => setShowVideoSuccessModal(false)}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+
         </Tabs>
       </div>
     </div>
