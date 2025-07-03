@@ -254,7 +254,7 @@ const FlipBookUploader: React.FC = () => {
                   className="modal-content text-center p-4"
                   style={{
                     borderRadius: "16px",
-                    width: "320px", // reduce modal width
+                    width: "360px", // reduce modal width
                     margin: "0 auto",
                   }}
                 >
@@ -374,11 +374,12 @@ const FlipBookUploader: React.FC = () => {
               {/* Preview Section */}
               <div className="col-md-8 d-flex flex-column align-items-center">
                 <div
-                  className="w-100 p-3 rounded"
+                  className="w-100 p-4 rounded"
                   style={{
                     border: "1px solid #ddd",
                     backgroundColor: "#fafafa",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                    height: "850px", 
                   }}
                 >
                   <div className="mb-2" style={{ fontSize: "0.9rem" }}>

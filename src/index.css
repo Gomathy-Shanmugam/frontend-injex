@@ -968,20 +968,7 @@ rubric editpointmodl css ---------- */
 }
 
 
-.lesson-popup-content {
-  flex: 1;
-  overflow-y: auto;
-  min-height: unset;         /* remove fixed 400px if not needed */
-  padding: 20px 30px;
-}
 
-
-.lesson-popup {
-  height: 95vh;              /* Instead of max-height */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
 
 
 
