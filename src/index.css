@@ -780,6 +780,26 @@ body {
 }
 
 
+/* --------------curriculum video file ------------- */
+.video-preview-container {
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.video-placeholder {
+  border-radius: 0 !important;
+  background-color: #f9f9f9 !important; /* Or match your page */
+  padding: 0 !important;
+}
+
+.video-preview-item,
+.preview-video-player {
+  border-radius: 0 !important;
+}
+
 /* ---------------------responsiveness for grade ------------ */
 /* Grade.css */
 
@@ -984,31 +1004,168 @@ rubric editpointmodl css ---------- */
   background-color: rgba(0, 0, 0, 0.2);
   transition: backdrop-filter 0.3s ease;
 }
+/* 
+----------------responsivess for rubric editor ---------- */
 
+/* RubricEditor.css */
 
-/* --------------curriculum video file ------------- */
-.video-preview-container {
-  border-radius: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
+/* RubricEditor.css - Mobile & Tablet Responsive Enhancements */
+
+.rubric-container {
+  padding: 1rem !important;
 }
 
-.video-placeholder {
-  border-radius: 0 !important;
-  background-color: #f9f9f9 !important; /* Or match your page */
-  padding: 0 !important;
+@media (max-width: 768px) {
+  .rubric-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rubric-header h6 {
+    margin-bottom: 0.5rem;
+  }
+
+  .rubric-header button {
+    align-self: flex-end;
+  }
+
+  .rubric-container {
+    padding: 1rem;
+  }
+
+  .rubric-container table {
+    font-size: 13px;
+  }
+
+  .rubric-container th,
+  .rubric-container td {
+    min-width: 160px;
+    font-size: 13px;
+    word-break: break-word;
+  }
+
+  .topbar-last-updated {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 13px !important;
+  }
+
+  .rubric-table-wrapper {
+    padding-bottom: 1rem;
+  }
+
+  .btn {
+    font-size: 13px !important;
+  }
 }
 
-.video-preview-item,
-.preview-video-player {
-  border-radius: 0 !important;
+@media (max-width: 576px) {
+  .rubric-container table {
+    font-size: 12.5px;
+  }
+
+  .rubric-header button {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .rubric-container th,
+  .rubric-container td {
+    min-width: 140px;
+  }
 }
 
 
+/* --------------responsivess for newcategory modal ---------- */
 
 
+/* NewCategoryModal.css */
 
+/* Modal width and padding responsiveness */
+@media (max-width: 768px) {
+  .custom-modal .modal-dialog {
+    max-width: 95% !important;
+    margin: 1rem auto;
+  }
 
+  .custom-modal .modal-content {
+    padding: 1rem;
+    font-size: 14px;
+  }
 
+  .custom-modal .modal-title {
+    font-size: 16px;
+  }
+
+  .custom-modal .form-control {
+    font-size: 14px !important;
+  }
+
+  .custom-modal .form-label {
+    font-size: 14px !important;
+  }
+
+  .custom-modal .modal-footer .btn {
+    font-size: 14px !important;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-modal .modal-body {
+    padding: 1rem 0.75rem;
+  }
+
+  .custom-modal .row {
+    flex-direction: column;
+  }
+
+  .custom-modal .col-6 {
+    width: 100%;
+  }
+
+  .custom-modal .form-label {
+    margin-bottom: 0.25rem;
+  }
+
+  .custom-modal .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .custom-modal .modal-footer .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+ /* --------------responsiveness for newcriteriamodal -------- */
+  @media (max-width: 768px) {
+            .responsive-modal .modal-dialog {
+              max-width: 95% !important;
+              margin: 1rem auto;
+            }
+            .responsive-modal .modal-content {
+              font-size: 14px !important;
+              padding: 0.5rem;
+            }
+            .responsive-modal .modal-body {
+              padding: 1rem;
+            }
+            .responsive-modal .form-control {
+              font-size: 14px !important;
+            }
+            .responsive-modal .btn {
+              width: 100%;
+              margin-top: 0.5rem;
+            }
+          }
+
+          @media (max-width: 576px) {
+            .responsive-modal .modal-title {
+              font-size: 15px;
+            }
+            .responsive-modal .modal-body {
+              padding: 0.75rem;
+            }
+          }
+        
