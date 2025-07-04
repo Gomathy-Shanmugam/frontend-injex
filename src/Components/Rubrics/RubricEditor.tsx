@@ -117,7 +117,9 @@ const [selectedCriteria, setSelectedCriteria] = useState<Criteria | null>(
 const [showNewCategoryModal, setShowNewCategoryModal] = useState(false);
 const handleShowNewCategory = () => setShowNewCategoryModal(true);
 const handleHideNewCategory = () => setShowNewCategoryModal(false);
-
+const defaultpoints = [{ label: "Excellent", points: 11 },
+  { label: "Good", points: 8 },
+  { label: "Needs Improvement", points: 1 },]
 const [predefinedPoints, setPredefinedPoints] = useState([
   { label: "Excellent", points: 11 },
   { label: "Good", points: 8 },
@@ -134,129 +136,7 @@ const [reopenAfterPointsUpdate, setReopenAfterPointsUpdate] = useState(false);
 useEffect(() => {
   predefinedPointsRef.current = predefinedPoints;
 }, [predefinedPoints]);
-  //   const handleAddCategory = (
-  //     newLabel: string,
-  //     newPoint: number,
-  //     descriptions: string[]
-  //   ) => {
-  //     // 1. Add new point to predefinedPoints
-  //    setPredefinedPoints((prev) => {
-  //   const updated = [...prev, { label: newLabel, points: newPoint }];
-  //   console.log("✅ Updated points in setter:", updated);
-  //   return updated;
-  // });
-
-  //     setCriteriaList((prevList) =>
-  //       prevList.map((criterion, idx) => ({
-  //         ...criterion,
-  //         levels: [
-  //           ...criterion.levels,
-  //           {
-  //             label: newLabel,
-  //             points: newPoint,
-  //             description: descriptions[idx] || "",
-  //           },
-  //         ],
-  //       }))
-  //     );
-  //   };
-
-  // const handleSaveEditedPoints = (
-
-  //   updatedPoints: { label: string; points: number }[]
-  // ) => {
-  //   setPredefinedPoints(updatedPoints);
-
-  //   // Update points inside criteriaList
-  //   setCriteriaList((prevList) =>
-  //     prevList.map((criterion) => ({
-  //       ...criterion,
-  //       levels: criterion.levels.map((level) => {
-  //         const updated = updatedPoints.find((p) => p.label === level.label);
-  //         return updated ? { ...level, points: updated.points } : level;
-  //       }),
-  //     }))
-  //   );
-  // };
-
-  // const handleAddCategory = (
-  //   newLabel: string,
-  //   newPoint: number,
-  //   descriptions: string[]
-  // ) => {
-  //   setPredefinedPoints((prev) => [...prev, { label: newLabel, points: newPoint }]);
-
-  //   setCriteriaList((prevList) =>
-  //     prevList.map((criterion, idx) => ({
-  //       ...criterion,
-  //       levels: [
-  //         ...criterion.levels,
-  //         {
-  //           label: newLabel,
-  //           points: newPoint,
-  //           description: descriptions[idx] || "", // this must align!
-  //         },
-  //       ],
-  //     }))
-  //   );
-  // };
-  // const handleAddCategory = (
-  //   newLabel: string,
-  //   newPoint: number,
-  //   descriptions: string[]
-  // ) => {
-  //   setPredefinedPoints((prev) => {
-  //     const updated = [...prev, { label: newLabel, points: newPoint }];
-  //     console.log("Updated points:", updated); // Debug log
-  //     return updated;
-  //   });
-
-  //   setCriteriaList((prevList) =>
-  //     prevList.map((criterion, idx) => ({
-  //       ...criterion,
-  //       levels: [
-  //         ...criterion.levels,
-  //         {
-  //           label: newLabel,
-  //           points: newPoint,
-  //           description: descriptions[idx] || "",
-  //         },
-  //       ],
-  //     }))
-  //   );
-  // };
-
-  //  const handleAddCategory = (newLabel: string, newPoint: number, descriptions: string[]) => {
-  //   // Ensure unique label
-  //   if (predefinedPoints.some((point) => point.label === newLabel)) {
-  //     console.warn(`Category "${newLabel}" already exists. Skipping addition.`);
-  //     return;
-  //   }
-
-  //   // Update predefinedPoints
-  //   setPredefinedPoints((prev) => {
-  //     const updated = [...prev, { label: newLabel, points: newPoint }];
-  //     console.log("✅ Added category. Final predefinedPoints:", [...predefinedPoints, { label: newLabel, points: newPoint }]);
-
-  //     console.log("Updated predefinedPoints:", updated); // Debug log
-  //     return updated;
-  //   });
-
-  //   // Update criteriaList with new level
-  //   setCriteriaList((prevList) =>
-  //     prevList.map((criterion, idx) => ({
-  //       ...criterion,
-  //       levels: [
-  //         ...criterion.levels,
-  //         {
-  //           label: newLabel,
-  //           points: newPoint,
-  //           description: descriptions[idx] || "",
-  //         },
-  //       ],
-  //     }))
-  //   );
-  // };
+  
 
 const handleAddCategory = (
   newLabel: string,
@@ -270,11 +150,14 @@ const handleAddCategory = (
   }
 
   // ✅ Update predefinedPoints using correct reference
-  setPredefinedPoints((prev) => {
-    const updated = [...prev, { label: newLabel, points: newPoint }];
-    console.log("✅ Final updated predefinedPoints:", updated);
-    return updated;
-  });
+  // setPredefinedPoints((prev) => {
+  //   const updated = [...prev, { label: newLabel, points: newPoint }];
+  //   console.log("✅ Final updated predefinedPoints:", updated);
+  //   return updated;
+  // });
+
+ const updatedPoints = [...predefinedPoints, { label: newLabel, points: newPoint }];
+  setPredefinedPoints(updatedPoints); 
 
   // ✅ Update criteriaList with new level
   setCriteriaList((prevList) =>
@@ -315,62 +198,6 @@ const handleOpenEditPointsModal = () => {
   setModalPoints(latestPoints); // store in dedicated state
   setEditPointsModalShow(true); // open modal
 };
-
-
-
-
-
-
-  // const handleEditPredefinedPoint = (
-  //   oldLabel: string,
-  //   newLabel: string,
-  //   newPoints: number
-  // ) => {
-  //   // 1. Update predefined points
-  //   setPredefinedPoints((prev) =>
-  //     prev.map((p) =>
-  //       p.label === oldLabel ? { label: newLabel, points: newPoints } : p
-  //     )
-  //   );
-
-  //   // 2. Update criteriaList
-  //   setCriteriaList((prevList) =>
-  //     prevList.map((criterion) => {
-  //       const updatedLevels = criterion.levels.map((level) => {
-  //         if (level.label === oldLabel) {
-  //           return {
-  //             ...level,
-  //             label: newLabel,
-  //             points: newPoints,
-  //           };
-  //         }
-  //         return level;
-  //       });
-
-  //       const alreadyHasNewCombo = updatedLevels.some(
-  //         (l) => l.label === newLabel && l.points === newPoints
-  //       );
-
-  //       // OPTIONAL: fallback description (can be blank or reuse from old)
-  //       const fallbackDesc =
-  //         criterion.levels.find((l) => l.label === oldLabel)?.description || "";
-
-  //       return {
-  //         ...criterion,
-  //         levels: alreadyHasNewCombo
-  //           ? updatedLevels
-  //           : [
-  //               ...updatedLevels,
-  //               {
-  //                 label: newLabel,
-  //                 points: newPoints,
-  //                 description: fallbackDesc, // or ""
-  //               },
-  //             ],
-  //       };
-  //     })
-  //   );
-  // };
 
   const handleEditPredefinedPoint = (
     oldLabel: string,
@@ -446,37 +273,7 @@ const handleOpenEditPointsModal = () => {
     setCriteriaModalShow(false);
   };
 
-  //  const uniquePoints = [
-  //   ...new Set([
-  //     ...predefinedPoints.map((p) => p.points),
-  //     ...criteriaList.flatMap((c) => c.levels.map((l) => l.points)),
-  //   ]),
-  // ].sort((a, b) => b - a);
-
-  //   const resolvedColumns = uniquePoints.map((pt) => {
-  //     const match = predefinedPoints.find((p) => p.points === pt);
-  //     return {
-  //       points: pt,
-  //       label: match?.label || `Custom (${pt})`,
-  //     };
-  //   });
-
-  // const resolvedColumns = useMemo(() => {
-  //   const uniquePoints = [
-  //     ...new Set([
-  //       ...predefinedPoints.map((p) => p.points),
-  //       ...criteriaList.flatMap((c) => c.levels.map((l) => l.points)),
-  //     ]),
-  //   ].sort((a, b) => b - a);
-
-  //   return uniquePoints.map((pt) => {
-  //     const match = predefinedPoints.find((p) => p.points === pt);
-  //     return {
-  //       points: pt,
-  //       label: match?.label || `Custom (${pt})`,
-  //     };
-  //   });
-  // }, [predefinedPoints, criteriaList]);
+  
 
   const resolvedColumns = useMemo(() => {
     const uniqueCombos = new Map<string, { label: string; points: number }>();
@@ -785,20 +582,15 @@ const handleOpenEditPointsModal = () => {
         </Toast>
       </ToastContainer>
 
-      {/* <EditPointsModal
-  key={`edit-${predefinedPoints.map(p => `${p.label}-${p.points}`).join("|")}`} // ✅ now unique
-  show={editPointsModalShow}
-  onHide={() => setEditPointsModalShow(false)}
-  predefinedPoints={predefinedPoints}
-  onSave={handleSaveEditedPoints}
-/> */}
+    
 
-     {editPointsModalShow && (
+     {editPointsModalShow && (  
   <EditPointsModal
     key={`modal-${modalPoints.map((p) => p.label).join("-")}-${modalPoints.length}`}
     show={editPointsModalShow}
     onHide={() => setEditPointsModalShow(false)}
-    predefinedPoints={modalPoints}
+    // predefinedPoints={modalPoints}
+    predefinedPoints={predefinedPoints}
     onSave={handleSaveEditedPoints}
   />
 )}
@@ -808,3 +600,225 @@ const handleOpenEditPointsModal = () => {
 };
 
 export default RubricEditor;
+
+
+  {/* <EditPointsModal
+  key={`edit-${predefinedPoints.map(p => `${p.label}-${p.points}`).join("|")}`} // ✅ now unique
+  show={editPointsModalShow}
+  onHide={() => setEditPointsModalShow(false)}
+  predefinedPoints={predefinedPoints}
+  onSave={handleSaveEditedPoints}
+/> */}
+
+
+//   const handleAddCategory = (
+  //     newLabel: string,
+  //     newPoint: number,
+  //     descriptions: string[]
+  //   ) => {
+  //     // 1. Add new point to predefinedPoints
+  //    setPredefinedPoints((prev) => {
+  //   const updated = [...prev, { label: newLabel, points: newPoint }];
+  //   console.log("✅ Updated points in setter:", updated);
+  //   return updated;
+  // });
+
+  //     setCriteriaList((prevList) =>
+  //       prevList.map((criterion, idx) => ({
+  //         ...criterion,
+  //         levels: [
+  //           ...criterion.levels,
+  //           {
+  //             label: newLabel,
+  //             points: newPoint,
+  //             description: descriptions[idx] || "",
+  //           },
+  //         ],
+  //       }))
+  //     );
+  //   };
+
+  // const handleSaveEditedPoints = (
+
+  //   updatedPoints: { label: string; points: number }[]
+  // ) => {
+  //   setPredefinedPoints(updatedPoints);
+
+  //   // Update points inside criteriaList
+  //   setCriteriaList((prevList) =>
+  //     prevList.map((criterion) => ({
+  //       ...criterion,
+  //       levels: criterion.levels.map((level) => {
+  //         const updated = updatedPoints.find((p) => p.label === level.label);
+  //         return updated ? { ...level, points: updated.points } : level;
+  //       }),
+  //     }))
+  //   );
+  // };
+
+  // const handleAddCategory = (
+  //   newLabel: string,
+  //   newPoint: number,
+  //   descriptions: string[]
+  // ) => {
+  //   setPredefinedPoints((prev) => [...prev, { label: newLabel, points: newPoint }]);
+
+  //   setCriteriaList((prevList) =>
+  //     prevList.map((criterion, idx) => ({
+  //       ...criterion,
+  //       levels: [
+  //         ...criterion.levels,
+  //         {
+  //           label: newLabel,
+  //           points: newPoint,
+  //           description: descriptions[idx] || "", // this must align!
+  //         },
+  //       ],
+  //     }))
+  //   );
+  // };
+  // const handleAddCategory = (
+  //   newLabel: string,
+  //   newPoint: number,
+  //   descriptions: string[]
+  // ) => {
+  //   setPredefinedPoints((prev) => {
+  //     const updated = [...prev, { label: newLabel, points: newPoint }];
+  //     console.log("Updated points:", updated); // Debug log
+  //     return updated;
+  //   });
+
+  //   setCriteriaList((prevList) =>
+  //     prevList.map((criterion, idx) => ({
+  //       ...criterion,
+  //       levels: [
+  //         ...criterion.levels,
+  //         {
+  //           label: newLabel,
+  //           points: newPoint,
+  //           description: descriptions[idx] || "",
+  //         },
+  //       ],
+  //     }))
+  //   );
+  // };
+
+  //  const handleAddCategory = (newLabel: string, newPoint: number, descriptions: string[]) => {
+  //   // Ensure unique label
+  //   if (predefinedPoints.some((point) => point.label === newLabel)) {
+  //     console.warn(`Category "${newLabel}" already exists. Skipping addition.`);
+  //     return;
+  //   }
+
+  //   // Update predefinedPoints
+  //   setPredefinedPoints((prev) => {
+  //     const updated = [...prev, { label: newLabel, points: newPoint }];
+  //     console.log("✅ Added category. Final predefinedPoints:", [...predefinedPoints, { label: newLabel, points: newPoint }]);
+
+  //     console.log("Updated predefinedPoints:", updated); // Debug log
+  //     return updated;
+  //   });
+
+  //   // Update criteriaList with new level
+  //   setCriteriaList((prevList) =>
+  //     prevList.map((criterion, idx) => ({
+  //       ...criterion,
+  //       levels: [
+  //         ...criterion.levels,
+  //         {
+  //           label: newLabel,
+  //           points: newPoint,
+  //           description: descriptions[idx] || "",
+  //         },
+  //       ],
+  //     }))
+  //   );
+  // };
+
+
+
+
+  // const handleEditPredefinedPoint = (
+  //   oldLabel: string,
+  //   newLabel: string,
+  //   newPoints: number
+  // ) => {
+  //   // 1. Update predefined points
+  //   setPredefinedPoints((prev) =>
+  //     prev.map((p) =>
+  //       p.label === oldLabel ? { label: newLabel, points: newPoints } : p
+  //     )
+  //   );
+
+  //   // 2. Update criteriaList
+  //   setCriteriaList((prevList) =>
+  //     prevList.map((criterion) => {
+  //       const updatedLevels = criterion.levels.map((level) => {
+  //         if (level.label === oldLabel) {
+  //           return {
+  //             ...level,
+  //             label: newLabel,
+  //             points: newPoints,
+  //           };
+  //         }
+  //         return level;
+  //       });
+
+  //       const alreadyHasNewCombo = updatedLevels.some(
+  //         (l) => l.label === newLabel && l.points === newPoints
+  //       );
+
+  //       // OPTIONAL: fallback description (can be blank or reuse from old)
+  //       const fallbackDesc =
+  //         criterion.levels.find((l) => l.label === oldLabel)?.description || "";
+
+  //       return {
+  //         ...criterion,
+  //         levels: alreadyHasNewCombo
+  //           ? updatedLevels
+  //           : [
+  //               ...updatedLevels,
+  //               {
+  //                 label: newLabel,
+  //                 points: newPoints,
+  //                 description: fallbackDesc, // or ""
+  //               },
+  //             ],
+  //       };
+  //     })
+  //   );
+  // };
+
+
+
+//  const uniquePoints = [
+  //   ...new Set([
+  //     ...predefinedPoints.map((p) => p.points),
+  //     ...criteriaList.flatMap((c) => c.levels.map((l) => l.points)),
+  //   ]),
+  // ].sort((a, b) => b - a);
+
+  //   const resolvedColumns = uniquePoints.map((pt) => {
+  //     const match = predefinedPoints.find((p) => p.points === pt);
+  //     return {
+  //       points: pt,
+  //       label: match?.label || `Custom (${pt})`,
+  //     };
+  //   });
+
+  // const resolvedColumns = useMemo(() => {
+  //   const uniquePoints = [
+  //     ...new Set([
+  //       ...predefinedPoints.map((p) => p.points),
+  //       ...criteriaList.flatMap((c) => c.levels.map((l) => l.points)),
+  //     ]),
+  //   ].sort((a, b) => b - a);
+
+  //   return uniquePoints.map((pt) => {
+  //     const match = predefinedPoints.find((p) => p.points === pt);
+  //     return {
+  //       points: pt,
+  //       label: match?.label || `Custom (${pt})`,
+  //     };
+  //   });
+  // }, [predefinedPoints, criteriaList]);

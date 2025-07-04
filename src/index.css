@@ -780,6 +780,45 @@ body {
 }
 
 
+/* ---------------------responsiveness for grade ------------ */
+/* Grade.css */
+
+@media (max-width: 768px) {
+  .grade-sidebar {
+    display: none;
+  }
+
+  .grade-wrapper {
+    padding: 15px !important;
+  }
+
+  .grade-topbar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+
+  .grade-topbar h5 {
+    font-size: 1.1rem;
+  }
+
+  .grade-topbar .text-muted {
+    font-size: 0.85rem;
+  }
+
+  .grade-form-label {
+    font-size: 0.95rem;
+  }
+
+  .grade-table th,
+  .grade-table td {
+    font-size: 0.9rem;
+    word-break: break-word;
+  }
+}
+
+
+
 /* --------------------flipbook page ---------------------- */
 .flipbook-wrapper {
   margin: 0 auto;
@@ -826,7 +865,7 @@ rubric editpointmodl css ---------- */
 
 /* Input box style */
 .custom-input-box {
-  border: 1.5px solid rgba(0, 83, 228, 0.8) !important;
+  border: 1.5px solid rgba(142, 179, 243, 0.8) !important;
   border-radius: 10px;
   font-size: 15px;
   padding: 10px 16px;

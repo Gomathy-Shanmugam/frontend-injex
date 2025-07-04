@@ -41,6 +41,8 @@ const EditPointsModal: React.FC<EditPointsModalProps> = ({
   };
 
   return (
+    <>
+    {show && <div className="custom-blur-overlay"></div>}
     <Modal show={show} onHide={onHide} centered backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>Update Points</Modal.Title>
@@ -53,6 +55,7 @@ const EditPointsModal: React.FC<EditPointsModalProps> = ({
               type="number"
               value={point.points}
               onChange={(e) => handleChange(index, Number(e.target.value))}
+              className="custom-input-box"
             />
           </Form.Group>
         ))}
@@ -66,6 +69,7 @@ const EditPointsModal: React.FC<EditPointsModalProps> = ({
         </Button>
       </Modal.Footer>
     </Modal>
+    </>
   );
 };
 

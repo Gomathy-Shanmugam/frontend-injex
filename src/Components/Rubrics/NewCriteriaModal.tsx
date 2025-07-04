@@ -35,7 +35,7 @@ const NewCriteriaModal: React.FC<NewCriteriaModalProps> = ({
       title,
       levels: categoryLevels.map(({ label, points }) => ({
         label,
-        points,
+        points : points,
         description: descriptions[label] || '',
       })),
     };
@@ -45,6 +45,9 @@ const NewCriteriaModal: React.FC<NewCriteriaModalProps> = ({
   };
 
   return (
+<>
+
+    {show && <div className="custom-blur-overlay"></div>}
     <Modal show={show} onHide={onHide} centered backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title style={{ fontSize: '16px', fontWeight: 'bold' }}>New Criteria</Modal.Title>
@@ -58,24 +61,29 @@ const NewCriteriaModal: React.FC<NewCriteriaModalProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter criteria name"
+             className="custom-input-box"
             style={{ fontSize: '14px' }}
           />
         </Form.Group>
 
         <h6 style={{ fontSize: '16px', fontWeight: '600' }} className="mb-3">Descriptions for Rubrics</h6>
 
-        {categoryLevels.map(({ label }) => (
-          <Form.Group className="mb-3" key={label}>
-            <Form.Label style={{ fontSize: '14px' }}>Description for {label}</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={2}
-              value={descriptions[label] || ''}
-              onChange={(e) => handleDescriptionChange(label, e.target.value)}
-              style={{ fontSize: '14px' }}
-            />
-          </Form.Group>
-        ))}
+      {categoryLevels.map(({ label, points }) => (
+  <Form.Group className="mb-3" key={`${label}-${points}`}>
+    <Form.Label style={{ fontSize: '14px' }}>
+      Description for {label} ({points} pts)
+    </Form.Label>
+    <Form.Control
+      as="textarea"
+      rows={2}
+      value={descriptions[label] || ''}
+      onChange={(e) => handleDescriptionChange(label, e.target.value)}
+      style={{ fontSize: '14px' }}
+       className="custom-input-box"
+    />
+  </Form.Group>
+))}
+
 
         <div className="text-center">
           <Button
@@ -94,6 +102,7 @@ const NewCriteriaModal: React.FC<NewCriteriaModalProps> = ({
         </div>
       </Modal.Body>
     </Modal>
+    </>
   );
 };
 

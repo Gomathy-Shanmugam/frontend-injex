@@ -39,6 +39,8 @@ const NewCategoryModal: React.FC<Props> = ({
   );
   const [categoryError, setCategoryError] = useState<string | null>(null);
   const [predefinedError, setPredefinedError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
 
   const criteriaLabels = [
     "Content Quality",
@@ -102,31 +104,59 @@ const validatePoints = (
 
 
 
+// const handlePredefinedChange = (index: number, newValue: number) => {
+//   if (!predefinedPoints[index]) return; // guard against undefined index
+
+//   if (newValue < 1 || newValue > 11) {
+//     setPredefinedError("Points must be between 1 and 11.");
+//     return;
+//   }
+
+//   const isDuplicate =
+//     predefinedPoints.some(
+//       (item, i) => i !== index && item.points === newValue
+//     ) || existingPoints.includes(newValue);
+
+//   if (isDuplicate) {
+//     setPredefinedError("This point is already used. Please choose another.");
+//     return;
+//   }
+
+//   // const updated = [...predefinedPoints];
+//   const updated = [...localPredefined];
+
+//   updated[index] = { ...updated[index], points: newValue }; // safer assignment
+//   setLocalPredefined(updated); 
+//   setPredefinedError(null);
+
+//   if (points > 0) {
+//     const validation = validatePoints(points, updated);
+//     setCategoryError(validation);
+//   }
+// };
 const handlePredefinedChange = (index: number, newValue: number) => {
-  if (!predefinedPoints[index]) return; // guard against undefined index
+  if (!localPredefined[index]) return;
+
+  const updated = [...localPredefined];
+  updated[index] = { ...updated[index], points: newValue };
+
+  setLocalPredefined(updated); // ✅ always allow UI update
 
   if (newValue < 1 || newValue > 11) {
     setPredefinedError("Points must be between 1 and 11.");
     return;
   }
 
-  const isDuplicate =
-    predefinedPoints.some(
-      (item, i) => i !== index && item.points === newValue
-    ) || existingPoints.includes(newValue);
+  const values = updated.map((p) => p.points);
+  const isDuplicate = values.filter((v) => v === newValue).length > 1 || existingPoints.includes(newValue);
 
   if (isDuplicate) {
     setPredefinedError("This point is already used. Please choose another.");
-    return;
+  } else {
+    setPredefinedError(null);
   }
 
-  // const updated = [...predefinedPoints];
-  const updated = [...localPredefined];
-
-  updated[index] = { ...updated[index], points: newValue }; // safer assignment
-  setLocalPredefined(updated); 
-  setPredefinedError(null);
-
+  // Optional: also validate main "points" input if it's active
   if (points > 0) {
     const validation = validatePoints(points, updated);
     setCategoryError(validation);
@@ -144,7 +174,7 @@ const handleSubmit = () => {
   }
 
   onAddCategory(label, points, descriptions);
-  setPredefinedPoints(localPredefined); // Optional: update parent
+  // setPredefinedPoints(localPredefined); // Optional: update parent
 
 
 
@@ -160,7 +190,13 @@ const handleSubmit = () => {
 
 
 
+
   return (
+    <>
+  
+    
+    {show && <div className="custom-blur-overlay"></div>}
+
     <Modal show={show} onHide={onHide} centered className="custom-modal">
       <Modal.Header closeButton>
         <Modal.Title style={{ fontSize: "16px" }}>New Category</Modal.Title>
@@ -270,6 +306,7 @@ const handleSubmit = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+      </>
   );
 };
 

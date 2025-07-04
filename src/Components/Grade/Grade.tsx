@@ -149,7 +149,7 @@ const Grade: React.FC = () => {
           <GradeNavbar />
         </div>
 
-        <div style={{ flex: 1, padding: "30px" }}>
+        <div className="grade-wrapper" style={{ flex: 1, padding: "30px" }}>
           <Row className="mb-4 align-items-center">
             <Col>
               <h5 className="fw-bold border-start ps-2 border-warning border-4">
@@ -296,7 +296,7 @@ const Grade: React.FC = () => {
           </Table>
 
           <Row className="mb-3">
-            <Col md={5}>
+            <Col xs={12} md={5}>
               <Form.Group>
                 <Form.Label>New Category Name</Form.Label>
                 <Form.Control
@@ -308,7 +308,7 @@ const Grade: React.FC = () => {
                 />
               </Form.Group>
             </Col>
-            <Col md={3}>
+            <Col xs={12} md={3}>
               <Form.Group>
                 <Form.Label>Weight (%)</Form.Label>
                 <Form.Control
@@ -323,7 +323,7 @@ const Grade: React.FC = () => {
                 />
               </Form.Group>
             </Col>
-            <Col md={2} className="d-flex align-items-end">
+            <Col xs={12} md={2} className="d-flex align-items-end">
               <Button variant="outline-secondary" onClick={handleAddCategory}>
                 + Add Category
               </Button>
