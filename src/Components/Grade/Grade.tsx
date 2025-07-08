@@ -1,9 +1,13 @@
+
 import React, { useState } from "react";
 import { Row, Col, Form, Table, Button, Alert } from "react-bootstrap";
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import GradeNavbar from "./GradeNavbar";
 import TopBar from "../Common/Topbar";
 import MainNav from "../Common/MainNav";
+import { useDispatch } from "react-redux";
+import { setCategories as setCategoriesAction, setGradingScales as setGradingScalesAction } from "../Store/GradeSlice";
+
 
 type Category = {
   name: string;
@@ -11,10 +15,14 @@ type Category = {
 };
 type GradeScale = {
   letter: string;
-  range: string;
+  min: number;
+  max: number;
 };
 
 const Grade: React.FC = () => {
+
+  const dispatch = useDispatch();
+
   const [categories, setCategories] = useState<Category[]>([
     { name: "Module,Chapters,Lessons", weight: 50 },
     {
@@ -61,7 +69,13 @@ const Grade: React.FC = () => {
       return;
     }
 
-    setCategories([...categories, newCategory]);
+    // setCategories([...categories, newCategory]);
+
+    const updated = [...categories, newCategory];
+setCategories(updated);
+dispatch(setCategoriesAction(updated)); // ✅ use the correct alias
+
+
     setNewCategory({ name: "", weight: 0 });
     setError(null);
   };
@@ -94,6 +108,8 @@ const Grade: React.FC = () => {
     );
 
     setCategories(updated);
+    dispatch(setCategoriesAction(updated));
+
     setEditIndex(null);
     setEditCategory({ name: "", weight: 0 });
     setError(null);
@@ -108,18 +124,21 @@ const Grade: React.FC = () => {
   const handleDelete = (idx: number) => {
     const filtered = categories.filter((_, i) => i !== idx);
     setCategories(filtered);
+    dispatch(setCategoriesAction(filtered));
+
     setError(null);
   };
 
-  const [gradingScales, setGradingScales] = useState<GradeScale[]>([
-    { letter: "A+", range: "95 to 100 %" },
-    { letter: "A", range: "90 to 94 %" },
-    { letter: "B+", range: "85 to 89 %" },
-    { letter: "B", range: "75 to 84 %" },
-    { letter: "C", range: "65 to 74 %" },
-    { letter: "D", range: "50 to 64 %" },
-    { letter: "F", range: "Below 50%" },
-  ]);
+const [gradingScales, setGradingScales] = useState<GradeScale[]>([
+  { letter: "A+", min: 95, max: 100 },
+  { letter: "A", min: 90, max: 94 },
+  { letter: "B+", min: 85, max: 89 },
+  { letter: "B", min: 75, max: 84 },
+  { letter: "C", min: 65, max: 74 },
+  { letter: "D", min: 50, max: 64 },
+  { letter: "F", min: 0, max: 49 },
+]);
+
 
   const [editingGradeIndex, setEditingGradeIndex] = useState<number | null>(
     null
@@ -381,6 +400,8 @@ const Grade: React.FC = () => {
                               i === idx ? editGrade : g
                             );
                             setGradingScales(updated);
+dispatch(setGradingScalesAction(updated));
+
                             setEditingGradeIndex(null);
                             setEditGrade({ letter: "", range: "" });
                           }}
@@ -416,7 +437,9 @@ const Grade: React.FC = () => {
                             const updated = gradingScales.filter(
                               (_, i) => i !== idx
                             );
-                            setGradingScales(updated);
+setGradingScales(updated);
+dispatch(setGradingScalesAction(updated));
+
                           }}
                         >
                           <FaTrash />
@@ -453,7 +476,12 @@ const Grade: React.FC = () => {
                       className="text-success"
                       onClick={() => {
                         if (!newGrade.letter || !newGrade.range) return;
-                        setGradingScales([...gradingScales, newGrade]);
+                        // setGradingScales([...gradingScales, newGrade]);
+                        const updated = [...gradingScales, newGrade];
+setGradingScales(updated);
+dispatch(setGradingScalesAction(updated)); // ✅ Correct
+
+
                         setNewGrade({ letter: "", range: "" });
                         setNewGradeVisible(false);
                       }}

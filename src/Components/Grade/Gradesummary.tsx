@@ -1,113 +1,101 @@
 import React from "react";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import type { RootState } from "../Store/Store";
+import { Container, Row, Col, Table, Nav } from "react-bootstrap";
 
 const GradeSummary: React.FC = () => {
+  const categories = useSelector((state: RootState) => state.grade.categories);
+  const gradingScales = useSelector((state: RootState) => state.grade.gradingScales);
+
   return (
     <Container className="py-4" style={{ background: "#f8f9fa", minHeight: "100vh" }}>
-      
-      {/* Header Banner */}
-      <Row className="align-items-center mb-4 border-bottom pb-2" style={{ fontSize: "14px" }}>
-        <Col xs={12} md={6} className="d-flex align-items-center">
-          <div style={{
-            borderLeft: "4px solid #fbc02d",
-            paddingLeft: "10px",
-            fontWeight: 600,
-            fontSize: "16px"
-          }}>
+      {/* Header */}
+      <Row className="align-items-center mb-3 border-bottom pb-2" style={{ fontSize: "14px" }}>
+        <Col xs={12} md={6}>
+          <div style={{ borderLeft: "4px solid #fbc02d", paddingLeft: "10px", fontWeight: 600, fontSize: "16px" }}>
             Grades & Rubrics
           </div>
         </Col>
-        <Col xs={12} md={6} className="text-md-end text-danger mt-2 mt-md-0" style={{ fontSize: "13px" }}>
+        <Col xs={12} md={6} className="text-md-end text-danger" style={{ fontSize: "13px" }}>
           These pages are only for summary purposes. Grading and rubrics will be determined based on the Injex grading method.
         </Col>
       </Row>
 
-      {/* Grading Method and Points */}
+      {/* Nav Tabs */}
+      <Nav variant="tabs" defaultActiveKey="injex" className="mb-4">
+        <Nav.Item>
+          <Nav.Link eventKey="injex" active>Injex Grading</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="rubrics" disabled>Rubrics</Nav.Link>
+        </Nav.Item>
+      </Nav>
+
+      {/* Grading Method + Total Points + Extra Details */}
       <Row className="mb-4">
-        <Col xs={12} md={6} className="mb-3 mb-md-0">
-          <h6 style={{ fontSize: "16px", fontWeight: "600" }}>Grading Method</h6>
-          <p style={{ fontSize: "14px", marginBottom: "0" }}>Points</p>
+        <Col md={4}>
+          <h6 style={{ fontWeight: 600 }}>Grading Method</h6>
+          <p>Points</p>
         </Col>
-        <Col xs={12} md={6}>
-          <h6 style={{ fontSize: "16px", fontWeight: "600" }}>Total Course Points</h6>
-          <p style={{ fontSize: "14px", marginBottom: "0" }}>
-            100% Auto-calculated based on Lessons, assignments, quizzes
-          </p>
+        <Col md={5}>
+          <h6 style={{ fontWeight: 600 }}>Total Course Points</h6>
+          <p>100% Auto-calculated based on Lessons, assignments, quizzes</p>
+        </Col>
+        <Col md={3}>
+          <h6 style={{ fontWeight: 600 }}>Late Submission Penalty</h6>
+          <p>10%</p>
+          <div><strong>Minimum Passing Grade:</strong> 80%</div>
         </Col>
       </Row>
 
       {/* Grade Distribution */}
-      <Row className="mb-2">
-        <Col xs={12} md={6} className="mb-3 mb-md-0">
-          <h6 style={{ fontSize: "16px", fontWeight: "600" }}>Grade Distribution</h6>
-          <p style={{ fontSize: "14px", marginBottom: "0" }}>Minimum Passing Grade</p>
-          <p style={{ fontSize: "14px", fontWeight: "bold" }}>80%</p>
-        </Col>
-        <Col xs={12} md={6}>
-          <p style={{ fontSize: "14px", marginTop: "32px", marginBottom: "0" }}>
-            Late Submission Penalty
-          </p>
-          <p style={{ fontSize: "14px", fontWeight: "bold" }}>10%</p>
-        </Col>
-      </Row>
+      <h6 className="fw-bold mb-2">Grade Distribution</h6>
+      <Table bordered>
+        <thead className="table-light text-center">
+          <tr>
+            <th>Category</th>
+            <th>Weight (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((cat, idx) => (
+            <tr
+              key={idx}
+              className="text-center"
+              style={{
+                border: idx === 1 ? "2px solid #007bff" : undefined,
+                borderRadius: idx === 1 ? "6px" : undefined,
+              }}
+            >
+              <td>{cat.name}</td>
+              <td>{cat.weight} %</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
-      {/* Grade Distribution Table */}
-      <div className="table-responsive mb-5">
-        <Table bordered style={{ fontSize: "14px" }}>
-          <thead style={{ backgroundColor: "#f1f1f1" }}>
-            <tr>
-              <th>Category</th>
-              <th>Weight (%)</th>
+      {/* Grading Scale */}
+      <h6 className="fw-bold mt-4 mb-2">Grading Scale</h6>
+      <Table bordered>
+        <thead className="table-light text-center">
+          <tr>
+            <th>Letter Grade</th>
+            <th>Percentage Range</th>
+          </tr>
+        </thead>
+        <tbody className="text-center">
+          {gradingScales.map((scale, idx) => (
+            <tr key={idx}>
+              <td>{scale.letter}</td>
+              <td>{scale.range}</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Module, Chapters, Lessons</td>
-              <td>50%</td>
-            </tr>
-            <tr>
-              <td>
-                Quiz, Assignment, Simulation,
-                <br className="d-md-none" />
-                Group Discussion, Case Studies, Mock Sections
-              </td>
-              <td>30%</td>
-            </tr>
-            <tr>
-              <td>Simulation</td>
-              <td>5%</td>
-            </tr>
-            <tr>
-              <td>Internship</td>
-              <td>15%</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-
-      {/* Grading Scale Table */}
-      <h6 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Grading Scale</h6>
-      <div className="table-responsive">
-        <Table bordered style={{ fontSize: "14px" }}>
-          <thead style={{ backgroundColor: "#f1f1f1" }}>
-            <tr>
-              <th>Letter Grade</th>
-              <th>Percentage Range</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>A+</td><td>95 to 100 %</td></tr>
-            <tr><td>A</td><td>90 to 94 %</td></tr>
-            <tr><td>B+</td><td>85 to 89 %</td></tr>
-            <tr><td>B</td><td>75 to 84 %</td></tr>
-            <tr><td>C</td><td>65 to 74 %</td></tr>
-            <tr><td>R</td><td>50 to 64 %</td></tr>
-            <tr><td>F</td><td>Below 50%</td></tr>
-          </tbody>
-        </Table>
-      </div>
+          ))}
+        </tbody>
+      </Table>
     </Container>
   );
 };
 
 export default GradeSummary;
+
+
