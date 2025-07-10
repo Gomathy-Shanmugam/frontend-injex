@@ -265,9 +265,11 @@ const Grade: React.FC = () => {
                           })
                         }
                       />
-                    ) : `(
+                    ) : (
+                      `(
                       ${cat.weight} %
-                    )`}
+                    )`
+                    )}
                   </td>
                   <td>
                     {editIndex === idx ? (
@@ -415,9 +417,11 @@ const Grade: React.FC = () => {
                           placeholder="Max"
                         />
                       </div>
-                    ) : `(
+                    ) : (
+                      `(
                       ${grade.min} – ${grade.max} %
-                    )`}
+                    )`
+                    )}
                   </td>
 
                   <td>
@@ -564,16 +568,16 @@ const Grade: React.FC = () => {
             + Add New Grade
           </Button>
           <Button
-  variant="secondary"
-  className="mt-2 ms-3"
-  onClick={() => {
-    dispatch(setCategoriesAction(categories));
-    dispatch(setGradingScalesAction(gradingScales));
-    alert("✅ All grading data updated successfully!");
-  }}
->
-  Update
-</Button>
+            variant="secondary"
+            className="mt-2 ms-3"
+            onClick={() => {
+              dispatch(setCategoriesAction(categories));
+              dispatch(setGradingScalesAction(gradingScales));
+              alert("✅ All grading data updated successfully!");
+            }}
+          >
+            Update
+          </Button>
         </div>
       </div>
     </div>

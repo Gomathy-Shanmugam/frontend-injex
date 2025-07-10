@@ -30,6 +30,8 @@ const AppRoute: RouteObject[] = [
     element: <FlipBookUploader/>
     
   },
+ 
+
    {
     path: "/rubric",
     element: <RubricEditor/>

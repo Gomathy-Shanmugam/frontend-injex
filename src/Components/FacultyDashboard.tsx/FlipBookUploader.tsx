@@ -5,6 +5,9 @@ import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/build/pdf.worker.entry";
 import logoImageSrc from "../../assets/injex-bglogo.png";
 import FullScreenFlipbook from "./FullScreenFlipbook";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -21,6 +24,9 @@ const FlipBookUploader: React.FC = () => {
   const [uploadedFileName, setUploadedFileName] = useState<string>("");
   const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
   const [uploadedVideoFileName, setUploadedVideoFileName] = useState("");
+const [intenseLevel, setIntenseLevel] = useState("");
+
+
 
   // Video states
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -34,6 +40,9 @@ const FlipBookUploader: React.FC = () => {
   const [videoSecs, setVideoSecs] = useState("0");
 
   const [uploadError, setUploadError] = useState("");
+
+    const { lessonId } = useParams<{ lessonId: string }>(); // ✅ Extract from URL
+console.log("Received lessonId from URL:", lessonId);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -94,6 +103,10 @@ const FlipBookUploader: React.FC = () => {
         canvas.height - 20
       );
 
+
+
+
+
       return (
         <div className="page" key={`page-${index}`}>
           <img
@@ -115,14 +128,96 @@ const FlipBookUploader: React.FC = () => {
     setPdfPages(pages);
   };
 
-  const handleSaveFlipbook = () => {
-    console.log("Saving flipbook...", {
-      fileUrl,
-      hours: flipbookHours,
-      mins: flipbookMins,
-    });
+  // const handleSaveFlipbook = () => {
+  //   console.log("Saving flipbook...", {
+  //     fileUrl,
+  //     hours: flipbookHours,
+  //     mins: flipbookMins,
+  //   });
+  //   setShowSuccessModal(true);
+  // };
+
+
+
+//   const handleSaveFlipbook = async () => {
+//   try {
+//     const totalMinutes =
+//       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
+
+//     const payload = {
+//       lessonId, // ✅ use the existing variable
+//       duration: totalMinutes,
+//       fileName: uploadedFileName,
+//     };
+
+//     console.log("Sending flipbook data to backend:", payload);
+
+//     const response = await axios.post(
+//       "http://localhost:3000/api/flipbook-duration", // 🔁 update if different
+//       payload
+//     );
+
+//     console.log("Flipbook duration saved:", response.data);
+//     setShowSuccessModal(true);
+//   } catch (error) {
+//     console.error("Error saving flipbook duration:", error);
+//   }
+// };
+
+const handleSaveFlipbook = async () => {
+  try {
+    const hours = parseInt(flipbookHours || "0");
+    const minutes = parseInt(flipbookMins || "0");
+
+    const payload = {
+      lessonId,
+      duration: {
+        hours,
+        minutes,
+      },
+      fileName: uploadedFileName,
+    };
+
+    console.log("🚀 Sending flipbook data to backend:", payload);
+
+    const response = await axios.post(
+      "http://localhost:3000/api/flipbook-duration",
+      payload
+    );
+
+    console.log("✅ Flipbook duration saved:", response.data);
     setShowSuccessModal(true);
-  };
+  } catch (error) {
+    console.error("❌ Error saving flipbook duration:", error);
+  }
+};
+
+
+
+// const handleSaveFlipbook = async () => {
+//   try {
+//     const totalMinutes =
+//       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
+
+//     const payload = {
+//       lessonId,
+//       duration: totalMinutes,
+//       fileName: uploadedFileName,
+//     };
+
+//     console.log("🚀 Sending flipbook data to backend:", payload);
+
+//     // ✅ Simulate a delay like an API call
+//     await new Promise((resolve) => setTimeout(resolve, 1000));
+
+//     // ✅ Simulate success response
+//     console.log("✅ Flipbook duration saved (mock)");
+
+//     setShowSuccessModal(true);
+//   } catch (error) {
+//     console.error("❌ Error saving flipbook duration (mock):", error);
+//   }
+// };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -355,6 +450,22 @@ const FlipBookUploader: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                <div className="mb-3">
+  <Form.Label style={{ fontSize: "0.9rem" }}>Intense Level</Form.Label>
+  <Form.Select
+    style={{ fontSize: "0.85rem" }}
+    value={intenseLevel}
+    onChange={(e) => setIntenseLevel(e.target.value)}
+  >
+    <option value="">Select Level</option>
+    <option value="Beginner">Beginner</option>
+    <option value="Intermediate">Intermediate</option>
+    <option value="Advanced">Advanced</option>
+    <option value="Expert">Expert</option>
+  </Form.Select>
+</div>
+
 
                 {/* Save Button */}
                 <Button
