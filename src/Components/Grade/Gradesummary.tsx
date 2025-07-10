@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../Store/Store";
 import { Container, Row, Col, Table, Nav } from "react-bootstrap";
+import { resetGradeState } from "../Store/GradeSlice";
 
 const GradeSummary: React.FC = () => {
   const categories = useSelector((state: RootState) => state.grade.categories);
@@ -22,14 +23,14 @@ const GradeSummary: React.FC = () => {
       </Row>
 
       {/* Nav Tabs */}
-      <Nav variant="tabs" defaultActiveKey="injex" className="mb-4">
+      {/* <Nav variant="tabs" defaultActiveKey="injex" className="mb-4">
         <Nav.Item>
           <Nav.Link eventKey="injex" active>Injex Grading</Nav.Link>
         </Nav.Item>
         <Nav.Item>
           <Nav.Link eventKey="rubrics" disabled>Rubrics</Nav.Link>
         </Nav.Item>
-      </Nav>
+      </Nav> */}
 
       {/* Grading Method + Total Points + Extra Details */}
       <Row className="mb-4">
@@ -87,7 +88,7 @@ const GradeSummary: React.FC = () => {
           {gradingScales.map((scale, idx) => (
             <tr key={idx}>
               <td>{scale.letter}</td>
-              <td>{scale.range}</td>
+              <td>{scale.min} – {scale.max} %</td>
             </tr>
           ))}
         </tbody>
@@ -97,5 +98,3 @@ const GradeSummary: React.FC = () => {
 };
 
 export default GradeSummary;
-
-

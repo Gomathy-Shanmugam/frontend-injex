@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Row, Col, Form, Table, Button, Alert } from "react-bootstrap";
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
@@ -6,8 +5,10 @@ import GradeNavbar from "./GradeNavbar";
 import TopBar from "../Common/Topbar";
 import MainNav from "../Common/MainNav";
 import { useDispatch } from "react-redux";
-import { setCategories as setCategoriesAction, setGradingScales as setGradingScalesAction } from "../Store/GradeSlice";
-
+import {
+  setCategories as setCategoriesAction,
+  setGradingScales as setGradingScalesAction,
+} from "../Store/GradeSlice";
 
 type Category = {
   name: string;
@@ -20,7 +21,6 @@ type GradeScale = {
 };
 
 const Grade: React.FC = () => {
-
   const dispatch = useDispatch();
 
   const [categories, setCategories] = useState<Category[]>([
@@ -72,9 +72,8 @@ const Grade: React.FC = () => {
     // setCategories([...categories, newCategory]);
 
     const updated = [...categories, newCategory];
-setCategories(updated);
-dispatch(setCategoriesAction(updated)); // ✅ use the correct alias
-
+    setCategories(updated);
+    dispatch(setCategoriesAction(updated)); // ✅ use the correct alias
 
     setNewCategory({ name: "", weight: 0 });
     setError(null);
@@ -129,28 +128,29 @@ dispatch(setCategoriesAction(updated)); // ✅ use the correct alias
     setError(null);
   };
 
-const [gradingScales, setGradingScales] = useState<GradeScale[]>([
-  { letter: "A+", min: 95, max: 100 },
-  { letter: "A", min: 90, max: 94 },
-  { letter: "B+", min: 85, max: 89 },
-  { letter: "B", min: 75, max: 84 },
-  { letter: "C", min: 65, max: 74 },
-  { letter: "D", min: 50, max: 64 },
-  { letter: "F", min: 0, max: 49 },
-]);
-
+  const [gradingScales, setGradingScales] = useState<GradeScale[]>([
+    { letter: "A+", min: 95, max: 100 },
+    { letter: "A", min: 90, max: 94 },
+    { letter: "B+", min: 85, max: 89 },
+    { letter: "B", min: 75, max: 84 },
+    { letter: "C", min: 65, max: 74 },
+    { letter: "D", min: 50, max: 64 },
+    { letter: "F", min: 0, max: 49 },
+  ]);
 
   const [editingGradeIndex, setEditingGradeIndex] = useState<number | null>(
     null
   );
   const [editGrade, setEditGrade] = useState<GradeScale>({
     letter: "",
-    range: "",
+    min: 0,
+    max: 0,
   });
   const [newGradeVisible, setNewGradeVisible] = useState(false);
   const [newGrade, setNewGrade] = useState<GradeScale>({
     letter: "",
-    range: "",
+    min: 0,
+    max: 0,
   });
 
   return (
@@ -265,9 +265,9 @@ const [gradingScales, setGradingScales] = useState<GradeScale[]>([
                           })
                         }
                       />
-                    ) : (
-                      `${cat.weight} %`
-                    )}
+                    ) : `(
+                      ${cat.weight} %
+                    )`}
                   </td>
                   <td>
                     {editIndex === idx ? (
@@ -375,7 +375,7 @@ const [gradingScales, setGradingScales] = useState<GradeScale[]>([
                       grade.letter
                     )}
                   </td>
-                  <td>
+                  {/* <td>
                     {editingGradeIndex === idx ? (
                       <Form.Control
                         type="text"
@@ -387,7 +387,39 @@ const [gradingScales, setGradingScales] = useState<GradeScale[]>([
                     ) : (
                       grade.range
                     )}
+                  </td> */}
+
+                  <td>
+                    {editingGradeIndex === idx ? (
+                      <div className="d-flex gap-2">
+                        <Form.Control
+                          type="number"
+                          value={editGrade.min}
+                          onChange={(e) =>
+                            setEditGrade({
+                              ...editGrade,
+                              min: parseInt(e.target.value),
+                            })
+                          }
+                          placeholder="Min"
+                        />
+                        <Form.Control
+                          type="number"
+                          value={editGrade.max}
+                          onChange={(e) =>
+                            setEditGrade({
+                              ...editGrade,
+                              max: parseInt(e.target.value),
+                            })
+                          }
+                          placeholder="Max"
+                        />
+                      </div>
+                    ) : `(
+                      ${grade.min} – ${grade.max} %
+                    )`}
                   </td>
+
                   <td>
                     {editingGradeIndex === idx ? (
                       <>
@@ -400,10 +432,10 @@ const [gradingScales, setGradingScales] = useState<GradeScale[]>([
                               i === idx ? editGrade : g
                             );
                             setGradingScales(updated);
-dispatch(setGradingScalesAction(updated));
+                            dispatch(setGradingScalesAction(updated));
 
                             setEditingGradeIndex(null);
-                            setEditGrade({ letter: "", range: "" });
+                            setEditGrade({ letter: "", min: 0, max: 0 });
                           }}
                         >
                           <FaCheck />
@@ -437,9 +469,8 @@ dispatch(setGradingScalesAction(updated));
                             const updated = gradingScales.filter(
                               (_, i) => i !== idx
                             );
-setGradingScales(updated);
-dispatch(setGradingScalesAction(updated));
-
+                            setGradingScales(updated);
+                            dispatch(setGradingScalesAction(updated));
                           }}
                         >
                           <FaTrash />
@@ -461,33 +492,56 @@ dispatch(setGradingScalesAction(updated));
                     />
                   </td>
                   <td>
-                    <Form.Control
-                      type="text"
-                      value={newGrade.range}
-                      onChange={(e) =>
-                        setNewGrade({ ...newGrade, range: e.target.value })
-                      }
-                    />
+                    <div className="d-flex gap-2">
+                      <Form.Control
+                        type="number"
+                        placeholder="Min"
+                        value={newGrade.min}
+                        onChange={(e) =>
+                          setNewGrade({
+                            ...newGrade,
+                            min: parseInt(e.target.value),
+                          })
+                        }
+                      />
+                      <Form.Control
+                        type="number"
+                        placeholder="Max"
+                        value={newGrade.max}
+                        onChange={(e) =>
+                          setNewGrade({
+                            ...newGrade,
+                            max: parseInt(e.target.value),
+                          })
+                        }
+                      />
+                    </div>
                   </td>
+
                   <td>
                     <Button
                       variant="link"
                       size="sm"
                       className="text-success"
                       onClick={() => {
-                        if (!newGrade.letter || !newGrade.range) return;
-                        // setGradingScales([...gradingScales, newGrade]);
+                        if (!newGrade.letter || newGrade.min > newGrade.max) {
+                          alert(
+                            "Please enter a valid letter grade and ensure min is less than or equal to max."
+                          );
+                          return;
+                        }
+
                         const updated = [...gradingScales, newGrade];
-setGradingScales(updated);
-dispatch(setGradingScalesAction(updated)); // ✅ Correct
+                        setGradingScales(updated);
+                        dispatch(setGradingScalesAction(updated));
 
-
-                        setNewGrade({ letter: "", range: "" });
+                        setNewGrade({ letter: "", min: 0, max: 0 });
                         setNewGradeVisible(false);
                       }}
                     >
                       <FaCheck />
                     </Button>
+
                     <Button
                       variant="link"
                       size="sm"
@@ -509,6 +563,17 @@ dispatch(setGradingScalesAction(updated)); // ✅ Correct
           >
             + Add New Grade
           </Button>
+          <Button
+  variant="secondary"
+  className="mt-2 ms-3"
+  onClick={() => {
+    dispatch(setCategoriesAction(categories));
+    dispatch(setGradingScalesAction(gradingScales));
+    alert("✅ All grading data updated successfully!");
+  }}
+>
+  Update
+</Button>
         </div>
       </div>
     </div>

@@ -419,7 +419,7 @@ const FlipBookUploader: React.FC = () => {
                         ×
                       </button>
 
-                      <HTMLFlipBook
+                      {/* <HTMLFlipBook
                         width={1000}
                         height={800}
                         size="stretch"
@@ -445,7 +445,41 @@ const FlipBookUploader: React.FC = () => {
                         disableFlipByClick={false}
                       >
                         {pdfPages}
-                      </HTMLFlipBook>
+                      </HTMLFlipBook> */}
+
+                      <div
+  onClick={() => setIsFullScreen(true)}
+  style={{ cursor: "pointer", width: "fit-content" }}
+>
+  <HTMLFlipBook
+    width={1000}
+    height={800}
+    size="stretch"
+    minWidth={200}
+    maxWidth={600}
+    minHeight={200}
+    maxHeight={800}
+    showCover={true}
+    mobileScrollSupport={true}
+    flippingTime={600}
+    className="flip-book"
+    style={{ boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}
+    startPage={0}
+    drawShadow={false}
+    usePortrait={false}
+    startZIndex={0}
+    autoSize={false}
+    maxShadowOpacity={0}
+    clickEventForward={false}
+    useMouseEvents={false}
+    swipeDistance={0}
+    showPageCorners={false}
+    disableFlipByClick={false}
+  >
+    {pdfPages}
+  </HTMLFlipBook>
+</div>
+
                     </div>
                   ) : (
                     <div className="text-muted small">
@@ -454,6 +488,13 @@ const FlipBookUploader: React.FC = () => {
                   )}
                 </div>
               </div>
+              {isFullScreen && (
+  <FullScreenFlipbook
+    pages={pdfPages}
+    onClose={() => setIsFullScreen(false)}
+  />
+)}
+
             </div>
           </Tab>
 
