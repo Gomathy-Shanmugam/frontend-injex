@@ -1857,7 +1857,7 @@ const addChapter = useCallback(
             </div>
           </div>
         ) : (
-          // Summary view (no frame)
+          // Summary view summary page (no frame)
           <div className="summary-content-frame">
             <div className="saved-modules-container">
               <h3>Summary</h3>
