@@ -1,0 +1,593 @@
+/* Base Styles */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.create-course-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 240px;
+  padding: 24px;
+  background-color: white;
+  border-right: 1px solid #e0e0e0;
+}
+.back-button {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 24px;
+  cursor: pointer;
+  text-align: center;
+}
+.create-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.tab-list {
+  list-style: none;
+}
+.tab-item {
+  padding: 14px 0;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+.tab-item:hover {
+  color: #333;
+  font-weight: 500;
+}
+.active-tab {
+  color: #f5b400;
+  font-weight: 600;
+}
+
+/* Form Section */
+.form-section {
+  flex: 1;
+  padding: 32px;
+  background-color: #f8f9fa;
+}
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.last-updated {
+  font-size: 14px;
+  color: #666;
+}
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+.action-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: all 0.2s;
+}
+.view-btn {
+  background: white;
+  color: #333;
+}
+.draft-btn {
+  background: #f0f0f0;
+  color: #333;
+}
+.publish-btn {
+  background: white;
+  color: #333;
+  border-color: #333;
+}
+.action-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Basic Form */
+.basic-form {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+  text-transform: none;
+}
+.subsection-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Thumbnail Section */
+.thumbnail-section {
+  margin-bottom: 32px;
+}
+.thumbnail-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.image-upload-box {
+  width: 220px;
+  height: 180px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #fafafa;
+  overflow: hidden;
+}
+.image-upload-box p {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  padding: 16px;
+}
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumbnail-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.change-btn,
+.remove-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+.change-btn {
+  background-color: #e6f2ff;
+  color: #0066cc;
+}
+.remove-btn {
+  background-color: #ffebeb;
+  color: #cc0000;
+}
+
+/* Form Elements */
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Fixed alignment for the expanded row - Force all 5 fields in same row */
+.expanded-row {
+  flex-wrap: nowrap !important;
+  gap: 12px;
+  align-items: flex-end;
+  width: 100%;
+  display: flex !important;
+}
+
+.expanded-row .form-group {
+  min-width: 0;
+}
+
+/* Adjust flex values to fit all 5 fields in one row */
+.expanded-row .form-group:nth-child(1) {
+  flex: 1.2;
+}
+
+.expanded-row .form-group:nth-child(2) {
+  flex: 0.8;
+}
+
+.expanded-row .form-group:nth-child(3) {
+  flex: 0.8;
+}
+
+.expanded-row .form-group:nth-child(4) {
+  flex: 1;
+}
+
+.expanded-row .form-group:nth-child(5) {
+  flex: 1;
+}
+
+.expanded-row {
+  flex-wrap: nowrap;
+  gap: 16px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.expanded-row .form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Make all fields in expanded row equal width */
+.expanded-row .form-group:nth-child(1),
+.expanded-row .form-group:nth-child(2),
+.expanded-row .form-group:nth-child(3),
+.expanded-row .form-group:nth-child(4),
+.expanded-row .form-group:nth-child(5) {
+  flex: 1;
+}
+
+/* Reduce the width of Regular Price and Sales Price fields by modifying the expanded row flex values */
+.expanded-row .form-group:nth-child(2) {
+  flex: 0.5;
+}
+
+.expanded-row .form-group:nth-child(3) {
+  flex: 0.5;
+}
+
+.form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+/* First row alignment - Course Title and Category */
+.form-row:not(.expanded-row):not(.description-split-row):not(.cost-price-row) .form-group:nth-child(1) {
+  flex: 1.2;
+}
+.form-row:not(.expanded-row):not(.description-split-row):not(.cost-price-row) .form-group:nth-child(2) {
+  flex: 0.8;
+}
+
+.form-input,
+.form-select,
+.form-date,
+.form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+.form-select {
+  appearance: none;
+}
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.form-date {
+  padding: 9px 12px;
+}
+
+/* Description Section */
+.description-split-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+.left-section,
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Description Input - Reduced height to match only up to "What You Learn" */
+.description-input-group {
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+.description-input {
+  width: 270%;
+  padding: 12px;
+  height: 140px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Cost Type, Price, Upload File - All in same horizontal line with perfect heading alignment */
+.cost-price-upload-row {
+  display: flex !important;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 0;
+  margin-bottom: 12px;
+  flex-direction: row !important;
+}
+
+.cost-type-group,
+.price-group,
+.upload-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure all headings are perfectly aligned */
+.cost-price-upload-row .subsection-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+  height: 20px;
+  line-height: 20px;
+  display: block;
+}
+
+.cost-type-group {
+  min-width: 120px;
+}
+
+.price-group {
+  min-width: 100px;
+}
+
+.upload-group {
+  min-width: 200px;
+}
+
+.cost-type-select,
+.price-input {
+  width: 100%;
+}
+
+/* File Upload Label */
+.file-upload-label {
+  padding: 10px 12px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 400;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  height: 44px;
+  line-height: 14px;
+  box-sizing: border-box;
+}
+
+/* File Upload Section */
+.file-upload-container {
+  display: block;
+}
+
+.save-button-row {
+  margin-bottom: 20px;
+  margin-top: -8px;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 332px;
+}
+
+.save-btn {
+  padding: 12px 24px;
+  background-color: #f5b400;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  width: 120px;
+}
+
+/* Uploaded Files - Better styling and positioning */
+.uploaded-files-section {
+  margin-top: 24px;
+  align-self: flex-start;
+  width: 100%;
+}
+
+.files-table-container {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+/* COMPLETE TABLE STYLING WITH CENTER ALIGNMENT */
+.files-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* CENTER ALIGN ALL TABLE HEADERS */
+.files-table th {
+  background: #f5f5f5 !important;
+  padding: 12px 16px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  border-bottom: 2px solid #e0e0e0 !important;
+}
+
+/* CENTER ALIGN ALL TABLE DATA */
+.files-table td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+  font-size: 14px !important;
+  text-align: center !important;
+}
+
+.files-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.files-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.file-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.view-file-btn,
+.delete-file-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.view-file-btn {
+  color: #0066cc;
+  background: #e6f2ff;
+}
+
+.view-file-btn:hover {
+  background: #cce7ff;
+}
+
+.delete-file-btn {
+  color: #cc0000;
+  background: #ffebeb;
+}
+
+.delete-file-btn:hover {
+  background: #ffcccc;
+}
+
+.file-price {
+  font-weight: 600;
+  color: #28a745;
+}
+
+/* Author & Administrator Comments - Increased height */
+.right-section .form-group:last-child .form-input {
+  height: 80px;
+  padding: 12px;
+  resize: vertical;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .basic-form {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 992px) {
+  .create-course-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .form-section {
+    padding: 24px;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .date-group {
+    flex: 1;
+  }
+  .description-split-row {
+    flex-direction: column;
+  }
+  .description-input {
+    width: 100%;
+    height: 150px;
+  }
+  .cost-price-upload-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .uploaded-files-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .action-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .thumbnail-content {
+    flex-direction: column;
+  }
+  .thumbnail-actions {
+    margin-top: 16px;
+  }
+  .right-dropdowns {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-section {
+    padding: 16px;
+  }
+  .basic-form {
+    padding: 20px;
+  }
+  .description-input {
+    height: 100px;
+  }
+  .uploaded-files-section th,
+  .uploaded-files-section td {
+    padding: 6px 0;
+    font-size: 13px;
+  }
+  .file-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

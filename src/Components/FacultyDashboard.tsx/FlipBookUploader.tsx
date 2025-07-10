@@ -8,7 +8,6 @@ import FullScreenFlipbook from "./FullScreenFlipbook";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 const FlipBookUploader: React.FC = () => {
@@ -24,9 +23,7 @@ const FlipBookUploader: React.FC = () => {
   const [uploadedFileName, setUploadedFileName] = useState<string>("");
   const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
   const [uploadedVideoFileName, setUploadedVideoFileName] = useState("");
-const [intenseLevel, setIntenseLevel] = useState("");
-
-
+  const [intenseLevel, setIntenseLevel] = useState("");
 
   // Video states
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -41,8 +38,8 @@ const [intenseLevel, setIntenseLevel] = useState("");
 
   const [uploadError, setUploadError] = useState("");
 
-    const { lessonId } = useParams<{ lessonId: string }>(); // ✅ Extract from URL
-console.log("Received lessonId from URL:", lessonId);
+  const { lessonId } = useParams<{ lessonId: string }>(); // ✅ Extract from URL
+  console.log("Received lessonId from URL:", lessonId);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,10 +100,6 @@ console.log("Received lessonId from URL:", lessonId);
         canvas.height - 20
       );
 
-
-
-
-
       return (
         <div className="page" key={`page-${index}`}>
           <img
@@ -137,87 +130,83 @@ console.log("Received lessonId from URL:", lessonId);
   //   setShowSuccessModal(true);
   // };
 
+  //   const handleSaveFlipbook = async () => {
+  //   try {
+  //     const totalMinutes =
+  //       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
 
+  //     const payload = {
+  //       lessonId, // ✅ use the existing variable
+  //       duration: totalMinutes,
+  //       fileName: uploadedFileName,
+  //     };
 
-//   const handleSaveFlipbook = async () => {
-//   try {
-//     const totalMinutes =
-//       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
+  //     console.log("Sending flipbook data to backend:", payload);
 
-//     const payload = {
-//       lessonId, // ✅ use the existing variable
-//       duration: totalMinutes,
-//       fileName: uploadedFileName,
-//     };
+  //     const response = await axios.post(
+  //       "http://localhost:3000/api/flipbook-duration", // 🔁 update if different
+  //       payload
+  //     );
 
-//     console.log("Sending flipbook data to backend:", payload);
+  //     console.log("Flipbook duration saved:", response.data);
+  //     setShowSuccessModal(true);
+  //   } catch (error) {
+  //     console.error("Error saving flipbook duration:", error);
+  //   }
+  // };
 
-//     const response = await axios.post(
-//       "http://localhost:3000/api/flipbook-duration", // 🔁 update if different
-//       payload
-//     );
+  const handleSaveFlipbook = async () => {
+    try {
+      const hours = parseInt(flipbookHours || "0");
+      const minutes = parseInt(flipbookMins || "0");
 
-//     console.log("Flipbook duration saved:", response.data);
-//     setShowSuccessModal(true);
-//   } catch (error) {
-//     console.error("Error saving flipbook duration:", error);
-//   }
-// };
+      const payload = {
+        lessonId,
+        duration: {
+          hours,
+          minutes,
+        },
+        fileName: uploadedFileName,
+      };
 
-const handleSaveFlipbook = async () => {
-  try {
-    const hours = parseInt(flipbookHours || "0");
-    const minutes = parseInt(flipbookMins || "0");
+      console.log("🚀 Sending flipbook data to backend:", payload);
 
-    const payload = {
-      lessonId,
-      duration: {
-        hours,
-        minutes,
-      },
-      fileName: uploadedFileName,
-    };
+      const response = await axios.post(
+        "http://localhost:3000/api/flipbook-duration",
+        payload
+      );
 
-    console.log("🚀 Sending flipbook data to backend:", payload);
+      console.log("✅ Flipbook duration saved:", response.data);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("❌ Error saving flipbook duration:", error);
+    }
+  };
 
-    const response = await axios.post(
-      "http://localhost:3000/api/flipbook-duration",
-      payload
-    );
+  // const handleSaveFlipbook = async () => {
+  //   try {
+  //     const totalMinutes =
+  //       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
 
-    console.log("✅ Flipbook duration saved:", response.data);
-    setShowSuccessModal(true);
-  } catch (error) {
-    console.error("❌ Error saving flipbook duration:", error);
-  }
-};
+  //     const payload = {
+  //       lessonId,
+  //       duration: totalMinutes,
+  //       fileName: uploadedFileName,
+  //     };
 
+  //     console.log("🚀 Sending flipbook data to backend:", payload);
 
+  //     // ✅ Simulate a delay like an API call
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-// const handleSaveFlipbook = async () => {
-//   try {
-//     const totalMinutes =
-//       parseInt(flipbookHours || "0") * 60 + parseInt(flipbookMins || "0");
+  //     // ✅ Simulate success response
+  //     console.log("✅ Flipbook duration saved (mock)");
 
-//     const payload = {
-//       lessonId,
-//       duration: totalMinutes,
-//       fileName: uploadedFileName,
-//     };
-
-//     console.log("🚀 Sending flipbook data to backend:", payload);
-
-//     // ✅ Simulate a delay like an API call
-//     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-//     // ✅ Simulate success response
-//     console.log("✅ Flipbook duration saved (mock)");
-
-//     setShowSuccessModal(true);
-//   } catch (error) {
-//     console.error("❌ Error saving flipbook duration (mock):", error);
-//   }
-// };
+  //     setShowSuccessModal(true);
+  //   } catch (error) {
+  //     console.error("❌ Error saving flipbook duration (mock):", error);
+  //   }
+  // };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -333,6 +322,7 @@ const handleSaveFlipbook = async () => {
           background: "white",
           width: "820px",
           boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          height: "650px",
         }}
       >
         <Tabs defaultActiveKey="flipbook" className="mb-3">
@@ -452,20 +442,21 @@ const handleSaveFlipbook = async () => {
                 </div>
 
                 <div className="mb-3">
-  <Form.Label style={{ fontSize: "0.9rem" }}>Intense Level</Form.Label>
-  <Form.Select
-    style={{ fontSize: "0.85rem" }}
-    value={intenseLevel}
-    onChange={(e) => setIntenseLevel(e.target.value)}
-  >
-    <option value="">Select Level</option>
-    <option value="Beginner">Beginner</option>
-    <option value="Intermediate">Intermediate</option>
-    <option value="Advanced">Advanced</option>
-    <option value="Expert">Expert</option>
-  </Form.Select>
-</div>
-
+                  <Form.Label style={{ fontSize: "0.9rem" }}>
+                    Intense Level
+                  </Form.Label>
+                  <Form.Select
+                    style={{ fontSize: "0.85rem" }}
+                    value={intenseLevel}
+                    onChange={(e) => setIntenseLevel(e.target.value)}
+                  >
+                    <option value="">Select Level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Expert">Expert</option>
+                  </Form.Select>
+                </div>
 
                 {/* Save Button */}
                 <Button
@@ -490,7 +481,7 @@ const handleSaveFlipbook = async () => {
                     border: "1px solid #ddd",
                     backgroundColor: "#fafafa",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                    height: "850px", 
+                    height: "550px",
                   }}
                 >
                   <div className="mb-2" style={{ fontSize: "0.9rem" }}>
@@ -559,38 +550,37 @@ const handleSaveFlipbook = async () => {
                       </HTMLFlipBook> */}
 
                       <div
-  onClick={() => setIsFullScreen(true)}
-  style={{ cursor: "pointer", width: "fit-content" }}
->
-  <HTMLFlipBook
-    width={1000}
-    height={800}
-    size="stretch"
-    minWidth={200}
-    maxWidth={600}
-    minHeight={200}
-    maxHeight={800}
-    showCover={true}
-    mobileScrollSupport={true}
-    flippingTime={600}
-    className="flip-book"
-    style={{ boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}
-    startPage={0}
-    drawShadow={false}
-    usePortrait={false}
-    startZIndex={0}
-    autoSize={false}
-    maxShadowOpacity={0}
-    clickEventForward={false}
-    useMouseEvents={false}
-    swipeDistance={0}
-    showPageCorners={false}
-    disableFlipByClick={false}
-  >
-    {pdfPages}
-  </HTMLFlipBook>
-</div>
-
+                        onClick={() => setIsFullScreen(true)}
+                        style={{ cursor: "pointer", width: "fit-content" }}
+                      >
+                        <HTMLFlipBook
+                          width={1000}
+                          height={800}
+                          size="stretch"
+                          minWidth={200}
+                          maxWidth={600}
+                          minHeight={200}
+                          maxHeight={800}
+                          showCover={true}
+                          mobileScrollSupport={true}
+                          flippingTime={600}
+                          className="flip-book"
+                          style={{ boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}
+                          startPage={0}
+                          drawShadow={false}
+                          usePortrait={false}
+                          startZIndex={0}
+                          autoSize={false}
+                          maxShadowOpacity={0}
+                          clickEventForward={false}
+                          useMouseEvents={false}
+                          swipeDistance={0}
+                          showPageCorners={false}
+                          disableFlipByClick={false}
+                        >
+                          {pdfPages}
+                        </HTMLFlipBook>
+                      </div>
                     </div>
                   ) : (
                     <div className="text-muted small">
@@ -600,12 +590,11 @@ const handleSaveFlipbook = async () => {
                 </div>
               </div>
               {isFullScreen && (
-  <FullScreenFlipbook
-    pages={pdfPages}
-    onClose={() => setIsFullScreen(false)}
-  />
-)}
-
+                <FullScreenFlipbook
+                  pages={pdfPages}
+                  onClose={() => setIsFullScreen(false)}
+                />
+              )}
             </div>
           </Tab>
 

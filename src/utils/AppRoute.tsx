@@ -6,6 +6,7 @@ import FlipBookUploader from "../Components/FacultyDashboard.tsx/FlipBookUploade
 import RubricEditor from "../Components/Rubrics/RubricEditor";
 import CurriculumCourse from "../Components/FacultyDashboard.tsx/CurriculumCourse";
 import GradeSummary from "../Components/Grade/Gradesummary";
+import BasicCreateCourse from "../Components/FacultyDashboard.tsx/BasicsCreateCourse"
 
 
 
@@ -30,7 +31,10 @@ const AppRoute: RouteObject[] = [
     element: <FlipBookUploader/>
     
   },
- 
+ {
+  path:"/basic",
+  element:<BasicCreateCourse/>
+ },
 
    {
     path: "/rubric",

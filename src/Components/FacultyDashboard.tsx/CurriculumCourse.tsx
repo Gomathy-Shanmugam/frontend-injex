@@ -9,6 +9,7 @@ const CurriculumCourse = ({ showSummary: externalShowSummary }: { showSummary?: 
       id: 1,
       title: "Module 1",
       description: "",
+      totalDuration: 124, 
       videos: [] as { name: string; url: string }[],
       files: [] as { name: string; content: string; type?: string; url?: string }[],
       chapters: [] as {
@@ -799,6 +800,7 @@ This document contains formatted text, images, tables, other Word-specific forma
         id: prev.length + 1,
         title: `Module ${prev.length + 1}`,
         description: "",
+        totalDuration: 0, 
         videos: [],
         files: [],
         chapters: [],
@@ -1101,6 +1103,9 @@ const addChapter = useCallback(
     setExpandedSummaryModules(newExpanded)
   }
 
+
+
+
   const toggleSummaryChapter = (moduleIndex: number, chapterIndex: number) => {
     const key = `${moduleIndex}-${chapterIndex}`
     const newExpanded = new Set(expandedSummaryChapters)
@@ -1181,6 +1186,8 @@ const addChapter = useCallback(
     setDeleteConfirmation(null)
   }
 
+
+  
   return (
     <>
       <div className={`curriculum-container ${isAnyPopupOpen ? "popup-open" : ""}`}>
@@ -1278,6 +1285,13 @@ const addChapter = useCallback(
                             ) : (
                               <h3 onClick={() => setEditingIndex({ type: "module", index: modIndex })}>{mod.title}</h3>
                             )}
+                        {mod.totalDuration !== undefined && (
+    <div className="module-duration">
+      ⏱️ {Math.floor(mod.totalDuration / 60)}h {mod.totalDuration % 60}m
+     
+
+    </div>
+  )}
                           </div>
 
                           <div className="module-actions">
