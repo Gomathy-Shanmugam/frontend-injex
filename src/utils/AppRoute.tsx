@@ -7,6 +7,8 @@ import RubricEditor from "../Components/Rubrics/RubricEditor";
 import CurriculumCourse from "../Components/FacultyDashboard.tsx/CurriculumCourse";
 import GradeSummary from "../Components/Grade/Gradesummary";
 import BasicCreateCourse from "../Components/FacultyDashboard.tsx/BasicsCreateCourse"
+import ConceptofInjex from "../Components/Injexconcept/ConceptofInjex";
+import PanelofExperts from "../Components/PanelofExperts/PanelofExperts";
 
 
 
@@ -44,6 +46,16 @@ const AppRoute: RouteObject[] = [
     {
     path: "/curriculum",
     element: <CurriculumCourse/>
+    
+  },
+   {
+    path: "/injex-concept",
+    element: <ConceptofInjex/>
+    
+  },
+   {
+    path: "/panel-experts",
+    element: <PanelofExperts/>
     
   }
 ]

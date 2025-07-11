@@ -4,41 +4,51 @@
   font-family: "Poppins", sans-serif;
 }
 /* TopBar.css                                                                                                                              @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'); */
+/* ====== RESET STYLES ====== */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
 
 /* ====== MAIN STYLES ====== */
 .top-bar {
   background: #ffc000;
-  padding: 15px 0;
-  font-family: "Poppins", sans-serif;
+  padding: 20px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   border-bottom: 1px solid #ffbf00;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  box-sizing: border-box;
 }
 
 .top-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
 }
 
-/* ====== LEFT SECTION ====== */
-.left-section {
+/* ====== ALL ITEMS IN ONE ROW ====== */
+.all-items-row {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 25px;
+  width: 100%;
+  min-height: 40px;
 }
 
 .partner-text {
   font-weight: 700;
   color: #000;
-  font-size: 16px;
-}
-
-.contact-info {
-  display: flex;
-  align-items: center;
-  gap: 25px;
+  font-size: 17px;
+  white-space: nowrap;
 }
 
 .phone-item,
@@ -47,47 +57,42 @@
   align-items: center;
   gap: 8px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px;
+  color: #000;
+  white-space: nowrap;
 }
 
-.cart-icon {
-  margin-left: 30px;
-  height: 15px;
-}
-
-/* ====== RIGHT SECTION (DASHBOARD BUTTONS) ====== */
-.right-section {
+.right-group {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  margin-left: auto;
 }
 
+/* ====== DASHBOARD BUTTONS ====== */
 .dashboard-btn {
   background: #fff;
   border: 1px solid #000;
   border-radius: 6px;
-  height: 46px;
-  width: 200px;
-  font-family: "Poppins", sans-serif;
+  height: 40px;
+  padding: 0 15px;
+  font-family: inherit;
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Space between icon and text */
+  gap: 8px;
   white-space: nowrap;
   transition: all 0.3s ease;
-  margin-left: 30px;
 }
 
-/* Button icons */
 .dashboard-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
-/* Hover effects */
 .dashboard-btn:hover {
   background: #f0f0f0;
   transform: translateY(-2px);
@@ -98,39 +103,60 @@
   transform: translateY(0);
 }
 
-/* Faculty button specificity */
 .dashboard-btn.faculty {
   background: #fff !important;
 }
 
 /* ====== RESPONSIVE STYLES ====== */
-@media (max-width: 768px) {
-  .top-container {
-    flex-direction: column;
-    gap: 15px;
-    padding: 0 20px;
+@media (max-width: 1024px) {
+  .all-items-row {
+    gap: 20px;
   }
 
-  .left-section {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
+  .partner-text {
+    font-size: 15px;
   }
 
-  .contact-info {
-    width: 100%;
-    justify-content: space-between;
-    gap: 15px;
-  }
-
-  .right-section {
-    width: 100%;
-    justify-content: space-between;
+  .phone-item,
+  .mail-item {
+    font-size: 14px;
   }
 
   .dashboard-btn {
-    width: 48%;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-container {
+    padding: 0 20px;
+  }
+
+  .all-items-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .right-group {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-container {
+    padding: 0 10px;
+  }
+
+  .all-items-row {
+    gap: 10px;
+  }
+
+  .dashboard-btn {
+    font-size: 13px;
+    padding: 0 10px;
   }
 }
 
@@ -596,6 +622,29 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* darker shadow */
   transform: translateY(-2px);
   cursor: pointer;
+}
+
+.yellow-nav-strip {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffcd38;
+  padding: 20px 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #222;
+}
+
+.yellow-nav-item {
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.yellow-nav-item:hover {
+  transform: scale(1.05);
+  text-decoration: underline;
 }
 
 

@@ -1,10 +1,48 @@
 import React from 'react';
-
 import { FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // ✅ Added for navigation
 
 const FooterSection: React.FC = () => {
+  const navigate = useNavigate();
+
+  // ✅ Yellow Strip Navigation Handler
+  const handleYellowNavClick = (item: string) => {
+    switch (item) {
+      case "Venture Hub":
+        navigate("/venture");
+        break;
+      case "Injex HR Exchange":
+        navigate("/hr-exchange");
+        break;
+      case "GCC":
+        navigate("/gcc");
+        break;
+      case "FURP":
+        navigate("/furp");
+        break;
+      case "Enterprise Skill Development":
+        navigate("/enterprise-skill");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
+      {/* 🔶 Yellow Nav Strip */}
+      <div className="yellow-nav-strip">
+        {["Injex HR Exchange", "GCC", "FURP", "Venture Hub", "Enterprise Skill Development"].map((item) => (
+          <div
+            key={item}
+            className="yellow-nav-item"
+            onClick={() => handleYellowNavClick(item)}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+
       {/* Social Impact Section */}
       <div className="social-impact-container">
         <div className="social-impact-section">
@@ -15,6 +53,7 @@ const FooterSection: React.FC = () => {
             <div className="impact-header">Student Services</div>
             <div className="impact-header">Help & Support</div>
           </div>
+
           <div className="social-impact-content">
             <div className="impact-column">
               <ul>
@@ -23,6 +62,7 @@ const FooterSection: React.FC = () => {
                 <li>Entrepreneurship Development</li>
               </ul>
             </div>
+
             <div className="impact-column">
               <ul>
                 <li>Invest In Injex</li>
@@ -32,25 +72,28 @@ const FooterSection: React.FC = () => {
                 <li>Become A Contributor</li>
               </ul>
             </div>
+
             <div className="impact-column">
               <ul>
-                <li>India</li>
-                <li>Overseas</li>
+                <li>Training Centre Info</li>
+                <li>Franchise Opportunity</li>
+                <li>Certification Process</li>
               </ul>
             </div>
+
             <div className="impact-column">
               <ul>
-                <li>Career Counselling</li>
-                <li>Placement Policy</li>
+                <li>Student Dashboard</li>
+                <li>Course Access</li>
+                <li>Results</li>
               </ul>
             </div>
+
             <div className="impact-column">
               <ul>
-                <li>Contact</li>
-                <li>FAQ</li>
-                <li>Terms And Conditions</li>
-                <li>Privacy Policy</li>
-                <li>Return & Refund Policy</li>
+                <li>FAQs</li>
+                <li>Technical Support</li>
+                <li>Contact Us</li>
               </ul>
             </div>
           </div>
@@ -68,6 +111,7 @@ const FooterSection: React.FC = () => {
                   <li>Webinars</li>
                 </ul>
               </div>
+
               <div className="events-column">
                 <div className="events-heading">Publications</div>
                 <ul className="events-list">
@@ -76,6 +120,7 @@ const FooterSection: React.FC = () => {
                   <li>Library</li>
                 </ul>
               </div>
+
               <div className="events-column">
                 <div className="events-heading">Community</div>
                 <ul className="events-list">
