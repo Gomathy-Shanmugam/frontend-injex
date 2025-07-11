@@ -22,9 +22,9 @@ const PanelofExperts: React.FC = () => {
     </div>
 
     {/* Section Heading */}
-      <div className="experts-section-heading">
+      {/* <div className="experts-section-heading">
         <h2>Apparel and Textile Technology</h2>
-      </div>
+      </div> */}
 
         <TextileExperts />
     <Footer/>
