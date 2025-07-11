@@ -2,6 +2,7 @@ import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
 import "./CurriculumCourse.css"
 import FlipBookUploader from "./FlipBookUploader"
+import axios from "axios"
 
 const CurriculumCourse = ({ showSummary: externalShowSummary }: { showSummary?: boolean }) => {
   const [modules, setModules] = useState([
@@ -75,6 +76,21 @@ const CurriculumCourse = ({ showSummary: externalShowSummary }: { showSummary?: 
   const [expandedSummaryModules, setExpandedSummaryModules] = useState<Set<number>>(new Set())
   const [expandedSummaryChapters, setExpandedSummaryChapters] = useState<Set<string>>(new Set())
   const [activeChapterTab, setActiveChapterTab] = useState<{ [key: string]: "lessons" | "quizzes" | "assignments" }>({})
+
+
+useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/modules"); // 🔁 replace with your backend API
+        setSavedModules(response.data); // Make sure response has module.totalDuration
+      } catch (error) {
+        console.error("Error fetching module summary:", error);
+      }
+    };
+
+    fetchModules();
+  }, []);
+
 
   // Delete confirmation state
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
@@ -1867,11 +1883,23 @@ const addChapter = useCallback(
                   <div key={moduleIndex}>
                     <div className="saved-module-row">
                       <div className="module-column">Module : {module.id}</div>
-                      <div className="details-column">
+                      {/* <div className="details-column">
                         Contains : (Chapters : {module.chapters.length}, Lessons :{" "}
                         {module.chapters.reduce((acc: number, chap: any) => acc + chap.lessons.length, 0)}, Quiz :{" "}
                         {module.quizzes?.length || 0}, Assignment : {module.assignments?.length || 0})
-                      </div>
+                      </div> */}
+
+                      <div className="details-column">
+  Contains : (Chapters : {module.chapters.length}, Lessons :{" "}
+  {module.chapters.reduce((acc: number, chap: any) => acc + chap.lessons.length, 0)}, Quiz :{" "}
+  {module.quizzes?.length || 0}, Assignment : {module.assignments?.length || 0})
+  {module.totalDuration !== undefined && (
+    <span className="module-duration">
+      | ⏱️ {Math.floor(module.totalDuration / 60)}h {module.totalDuration % 60}m
+    </span>
+  )}
+</div>
+
                       <div className="actions-column">
                         <button className="edit-module-btn" onClick={() => openPopup("module", moduleIndex)}>
                           <svg
@@ -1928,9 +1956,19 @@ const addChapter = useCallback(
                           <div key={chapterIndex}>
                             <div className="saved-chapter-row">
                               <div className="chapter-column">Chapter : {chapterIndex + 1}</div>
-                              <div className="details-column">
+                              {/* <div className="details-column">
                                 Contains : (Lessons : {chapter.lessons.length}, Quiz : 12, Assignment : 2)
-                              </div>
+                              </div> */}
+
+                              <div className="details-column">
+  Contains : (Lessons : {chapter.lessons.length}, Quiz : 12, Assignment : 2)
+  {chapter.totalDuration !== undefined && (
+    <span className="chapter-duration">
+      | ⏱️ {Math.floor(chapter.totalDuration / 60)}h {chapter.totalDuration % 60}m
+    </span>
+  )}
+</div>
+
                               <div className="actions-column">
                                 <button
                                   className="edit-module-btn"
@@ -2020,7 +2058,16 @@ const addChapter = useCallback(
                                       {chapter.lessons.map((lesson: any, lessonIndex: number) => (
                                         <div key={lessonIndex} className="lesson-item-row">
                                           <div className="lesson-column">Lesson : {lessonIndex + 1}</div>
-                                          <div className="lesson-title-column">{lesson.title}</div>
+                                          {/* <div className="lesson-title-column">{lesson.title}</div> */}
+                                          <div className="lesson-title-column">
+  {lesson.title}
+  {lesson.duration !== undefined && (
+    <span className="lesson-duration">
+      ⏱️ {Math.floor(lesson.duration / 60)}h {lesson.duration % 60}m
+    </span>
+  )}
+</div>
+
                                           <div className="actions-column">
                                             <button
                                               className="edit-module-btn"
