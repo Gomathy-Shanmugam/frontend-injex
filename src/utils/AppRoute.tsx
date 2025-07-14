@@ -11,6 +11,9 @@ import ConceptofInjex from "../Components/Injexconcept/ConceptofInjex";
 import PanelofExperts from "../Components/PanelofExperts/PanelofExperts";
 import JobLink from "../Components/JobLink/JobLink";
 import FacultyDevelopment from "../Components/Facultydevelopment/Facultydevelopment";
+import StartupSection from "../Components/StartUp/StartupSection";
+import Industryproject from "../Components/IndustryProject/Industryproject";
+import Ownventure from "../Components/Ownventure/Ownventure";
 
 
 
@@ -68,6 +71,21 @@ const AppRoute: RouteObject[] = [
     {
     path: "/faculty-development",
     element: <FacultyDevelopment />
+    
+  },
+   {
+    path: "/start-up",
+    element: <StartupSection />
+    
+  },
+   {
+    path: "/industry-project",
+    element: <Industryproject />
+    
+  },
+   {
+    path: "/own-venture",
+    element: <Ownventure />
     
   }
 ]
