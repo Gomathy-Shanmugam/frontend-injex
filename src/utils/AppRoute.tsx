@@ -9,6 +9,8 @@ import GradeSummary from "../Components/Grade/Gradesummary";
 import BasicCreateCourse from "../Components/FacultyDashboard.tsx/BasicsCreateCourse"
 import ConceptofInjex from "../Components/Injexconcept/ConceptofInjex";
 import PanelofExperts from "../Components/PanelofExperts/PanelofExperts";
+import JobLink from "../Components/JobLink/JobLink";
+import FacultyDevelopment from "../Components/Facultydevelopment/Facultydevelopment";
 
 
 
@@ -56,6 +58,16 @@ const AppRoute: RouteObject[] = [
    {
     path: "/panel-experts",
     element: <PanelofExperts/>
+    
+  },
+   {
+    path: "/job-link",
+    element: <JobLink />
+    
+  },
+    {
+    path: "/faculty-development",
+    element: <FacultyDevelopment />
     
   }
 ]

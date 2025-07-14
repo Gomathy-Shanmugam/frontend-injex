@@ -134,6 +134,8 @@ const RubricEditor: React.FC = () => {
   const [show, setShow] = useState(false);
   const [toastVisibleAfterDelete, setToastVisibleAfterDelete] = useState(false);
   const [reopenAfterPointsUpdate, setReopenAfterPointsUpdate] = useState(false);
+  const [rubricName, setRubricName] = useState("Injex Rubrics");
+
 
   useEffect(() => {
     predefinedPointsRef.current = predefinedPoints;
@@ -300,7 +302,64 @@ const RubricEditor: React.FC = () => {
     <>
       <Topbar />
       <MainNav />
-      <div
+
+      <div className="d-flex justify-content-end">
+  <div
+    className="topbar-last-updated text-secondary"
+    style={{ fontSize: "14px" }}
+  >
+    <span className="me-2">
+      <span style={{ color: "#fa6400", fontSize: "1rem" }}>🕒</span>{" "}
+      <strong>Last Updated:</strong>{" "}
+      {new Date().toLocaleTimeString("en-GB")} |{" "}
+      {new Date().toLocaleDateString("en-US")}
+    </span>
+  </div>
+</div>
+
+
+      <div className="container p-4">
+      <h4 className="d-flex align-items-center mb-4">
+        <div style={{ width: "5px", height: "24px", backgroundColor: "#f6bd26", marginRight: "10px" }}></div>
+        <strong>Rubrics</strong>
+      </h4>
+
+      <div className="row mb-4">
+        <div className="col-md-6 mb-3">
+          <label htmlFor="rubricName" className="form-label fw-semibold">Rubric Name</label>
+          <select
+            id="rubricName"
+            className="form-select"
+            value={rubricName}
+            onChange={(e) => setRubricName(e.target.value)}
+          >
+            <option value="Injex Rubrics">Injex Rubrics</option>
+            <option value="Custom Rubric">Custom Rubric</option>
+          </select>
+        </div>
+
+        <div className="col-md-6 mb-3">
+          <label className="form-label fw-semibold">Assign Rubric to Assignment</label>
+          <div className="fw-semibold mt-2">
+            Each Assignment which created to this Course
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="description" className="form-label fw-semibold">Description</label>
+        <textarea
+          id="description"
+          className="form-control"
+          rows={3}
+          defaultValue={`This is an Injex Institutions Rubrics for all\nCollege we are Consulting`}
+        ></textarea>
+      </div>
+    </div>
+      
+      {/* <div
+
+
         className="topbar-last-updated text-secondary"
         style={{ fontSize: "14px" }}
       >
@@ -310,7 +369,7 @@ const RubricEditor: React.FC = () => {
           {new Date().toLocaleTimeString("en-GB")} |{" "}
           {new Date().toLocaleDateString("en-US")}
         </span>
-      </div>
+      </div> */}
 
       <div className="rubric-main-content">
         <div className="container shadow rounded bg-white rubric-container">

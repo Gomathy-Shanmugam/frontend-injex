@@ -91,3 +91,75 @@
     text-align: center;
   }
 }
+
+
+/* For mobile screens (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Stack the cards vertically on mobile */
+  .experts-card-container {
+    grid-template-columns: 1fr;  /* One column layout */
+  }
+
+  /* Adjust the expert card layout for mobile */
+  .expert-card {
+    flex-direction: column; /* Stack image and info vertically */
+    align-items: center;  /* Center the card content */
+    height: auto; /* Allow the card to grow in height */
+    padding: 16px;  /* Reduce padding on mobile */
+  }
+
+  .expert-image {
+    width: 200px;  /* Reduce image size */
+    height: 200px;  /* Keep image aspect ratio */
+    margin-bottom: 16px;  /* Space between image and text */
+  }
+
+  .expert-info {
+    text-align: center;  /* Center the text for better mobile readability */
+  }
+
+  .expertise {
+    font-size: 14px;  /* Adjust font size for expertise */
+  }
+
+  .affiliation {
+    font-size: 12px;  /* Adjust font size for affiliation */
+  }
+
+  .section-heading {
+    font-size: 24px;  /* Adjust section heading font size for mobile */
+  }
+}
+
+/* For tablets screens (max-width: 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .experts-card-container {
+    grid-template-columns: repeat(2, 1fr);  /* Two columns layout */
+  }
+
+  .expert-card {
+    flex-direction: row; /* Keep horizontal layout for tablets */
+    height: 300px; /* Adjust height for tablet view */
+  }
+
+  .expert-image {
+    width: 220px; /* Adjust image size for tablet */
+    height: 220px; /* Adjust image size */
+  }
+
+  .expert-info {
+    text-align: left;  /* Align text to the left for tablets */
+  }
+
+  .expertise {
+    font-size: 16px;  /* Adjust font size */
+  }
+
+  .affiliation {
+    font-size: 14px;  /* Adjust font size */
+  }
+
+  .section-heading {
+    font-size: 26px;  /* Adjust section heading font size for tablet */
+  }
+}

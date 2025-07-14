@@ -45,3 +45,53 @@
   color: #3f74f0;
   text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
 }
+
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  /* Adjust heading font size for mobile */
+  .panel-experts-heading {
+    font-size: 28px; /* Smaller heading on mobile */
+  }
+
+  /* Adjust background container height on mobile */
+  .panel-experts-container {
+    height: 300px; /* Reduce the height on mobile */
+  }
+
+  /* Adjust section heading */
+  .experts-section-heading h2 {
+    font-size: 28px; /* Smaller section heading font */
+  }
+} 
+
+
+/* Tablet Responsiveness (for devices between 768px and 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .panel-experts-heading {
+    font-size: 36px; /* Adjust heading font size for tablets */
+  }
+
+  .panel-experts-container {
+    height: 350px; /* Adjust height for tablets */
+  }
+
+  .experts-section-heading h2 {
+    font-size: 30px; /* Slightly smaller heading font for tablet */
+  }
+}
+
+/* Larger Screen (desktop) styles */
+@media (min-width: 1025px) {
+  .panel-experts-heading {
+    font-size: 42px; /* Heading size for larger screens */
+  }
+
+  .panel-experts-container {
+    height: 400px; /* Height for larger screens */
+  }
+
+  .experts-section-heading h2 {
+    font-size: 32px; /* Larger section heading font */
+  }
+}

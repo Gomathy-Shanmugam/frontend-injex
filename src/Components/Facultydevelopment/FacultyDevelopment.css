@@ -1,0 +1,82 @@
+/* General Container Styles */
+.faculty-development-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Content Container */
+.content-container {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* Overview Section (Text on left) */
+.overview-section {
+  flex: 1;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 1.7em;
+  margin-top: 20px;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* Image Section (Image on right) */
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.faculty-image {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Empowering Educators Section */
+.empowering-educators-section {
+  font-size: 1.1rem;
+  color: #333;
+  margin-top: 40px;
+}
+
+.empowering-educators-section h3 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.empowering-educators-section h4 {
+  font-size: 1.5em;
+  color: #333;
+  margin-top: 20px;
+}
+
+.empowering-educators-section p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+  margin-top: 15px;
+}

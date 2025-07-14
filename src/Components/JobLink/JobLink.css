@@ -1,0 +1,119 @@
+/* JobLinkPage.css */
+
+.job-link-page-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.job-link-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.job-link-image-container {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.job-link-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* JobLinkPage.css */
+
+.job-link-text-container {
+  flex: 1;
+  background-color: #FFE081; /* Background color */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;  /* Centering text horizontally */
+  height:430px;
+  /* Flexbox styles for centering */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Vertically center */
+  align-items: center;      /* Horizontally center */
+}
+
+.job-link-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: 20px;  /* Add space between text and button */
+}
+
+
+.job-description-container {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+
+/* Mobile responsiveness (for screen widths up to 600px) */
+@media (max-width: 600px) {
+  .job-link-container {
+    flex-direction: column;  /* Stack the image and text vertically */
+    align-items: center;
+  }
+
+  .job-link-image-container {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .job-link-image {
+    width: 80%;  /* Make image a bit smaller */
+  }
+
+  .job-link-text-container {
+    width: 90%;  /* Adjust text container width */
+    height: auto; /* Allow flexibility for smaller screens */
+    padding: 15px; /* Adjust padding for mobile */
+  }
+
+  .job-link-button {
+    width: 100%;  /* Make the button take full width on mobile */
+    padding: 12px; /* Slightly larger button padding */
+  }
+}
+
+/* Tablet responsiveness (for screen widths between 600px and 1024px) */
+@media (max-width: 1024px) and (min-width: 601px) {
+  .job-link-container {
+    flex-direction: column;  /* Stack the image and text vertically */
+    align-items: center;
+  }
+
+  .job-link-image-container {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .job-link-image {
+    width: 70%;  /* Adjust image size for tablets */
+  }
+
+  .job-link-text-container {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .job-link-button {
+    width: 100%;
+    padding: 12px;
+  }
+}
