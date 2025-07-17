@@ -1303,7 +1303,7 @@ const addChapter = useCallback(
                             )}
                         {mod.totalDuration !== undefined && (
     <div className="module-duration">
-      ⏱️ {Math.floor(mod.totalDuration / 60)}h {mod.totalDuration % 60}m
+      {/* ⏱️ {Math.floor(mod.totalDuration / 60)}h {mod.totalDuration % 60}m */}
      
 
     </div>

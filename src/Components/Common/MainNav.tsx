@@ -16,8 +16,8 @@ const MainNav = () => {
             <Link to="/about">About Us</Link>
             <div className="dropdown-menu">
               <Link to="/about/why-injex">Why Injex</Link>
-              <Link to="/about/concept">Concept of Injex</Link>
-              <Link to="/about/panel">Panel of Experts</Link>
+              <Link to="/injex-concept">Concept of Injex</Link>
+              <Link to="/panel-experts">Panel of Experts</Link>
             </div>
           </div>
 
@@ -38,14 +38,14 @@ const MainNav = () => {
             <Link to="/authors">Authors & Instructors</Link>
             <div className="dropdown-menu">
               <Link to="/authors/mentors">Mentors</Link>
-              <Link to="/authors/training">Faculty Training</Link>
+              <Link to="/faculty-development">Faculty Training</Link>
             </div>
           </div>
 
           <div className="nav-item dropdown">
             <Link to="/industry">Industry Link</Link>
             <div className="dropdown-menu">
-              <Link to="/industry/job">Job</Link>
+              <Link to="/job-link">Job</Link>
               <Link to="/industry/internship">Internship</Link>
               <Link to="/industry/placement">Placement</Link>
             </div>
@@ -54,9 +54,9 @@ const MainNav = () => {
           <div className="nav-item dropdown">
             <Link to="/venture">Venture Hub</Link>
             <div className="dropdown-menu">
-              <Link to="/venture/startup">Startup</Link>
-              <Link to="/venture/project">Industry Project</Link>
-              <Link to="/venture/own">Own Ventures</Link>
+              <Link to="/start-up">Startup</Link>
+              <Link to="/industry-project">Industry Project</Link>
+              <Link to="/own-venture">Own Ventures</Link>
             </div>
           </div>
 

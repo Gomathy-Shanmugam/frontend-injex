@@ -69,7 +69,7 @@ function Home() {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    }, 2000); // 2000 ms = 2 seconds
+    }, 4000); // 2000 ms = 2 seconds
 
     return () => clearInterval(timer);
   }, []);

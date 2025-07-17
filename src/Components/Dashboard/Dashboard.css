@@ -1,0 +1,9 @@
+.pending-list li {
+  transition: all 0.2s ease-in-out;
+}
+.pending-list li:hover {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+

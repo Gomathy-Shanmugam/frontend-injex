@@ -14,6 +14,10 @@ import FacultyDevelopment from "../Components/Facultydevelopment/Facultydevelopm
 import StartupSection from "../Components/StartUp/StartupSection";
 import Industryproject from "../Components/IndustryProject/Industryproject";
 import Ownventure from "../Components/Ownventure/Ownventure";
+import Sidenav from "../Components/Dashboard/Sidenav";
+import Dashboard from "../Components/Dashboard/Dashboard";
+import CollegeList from "../Components/Dashboard/CollegeList";
+import CollegeRegister from "../Components/Dashboard/CollegeRegister";
 
 
 
@@ -86,6 +90,26 @@ const AppRoute: RouteObject[] = [
    {
     path: "/own-venture",
     element: <Ownventure />
+    
+  },
+   {
+    path: "/sidenav",
+    element: <Sidenav />
+    
+  },
+   {
+    path: "/dashboard",
+    element: <Dashboard />
+    
+  },
+   {
+    path: "/college-register",
+    element: <CollegeRegister />
+    
+  },
+   {
+    path: "/colleges",
+    element: <CollegeList />
     
   }
 ]
