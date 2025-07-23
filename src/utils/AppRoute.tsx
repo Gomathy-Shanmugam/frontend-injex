@@ -18,6 +18,7 @@ import Sidenav from "../Components/Dashboard/Sidenav";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import CollegeList from "../Components/Dashboard/CollegeList";
 import CollegeRegister from "../Components/Dashboard/CollegeRegister";
+import RegistrationDetails from "../Components/Dashboard/RegistrationDetails";
 
 
 
@@ -97,11 +98,17 @@ const AppRoute: RouteObject[] = [
     element: <Sidenav />
     
   },
-   {
-    path: "/dashboard",
-    element: <Dashboard />
-    
-  },
+{
+  path: "/dashboard",
+  element: <Dashboard />,
+  children: [
+    {
+      path: "registration/:email", 
+      element: <RegistrationDetails />
+    }
+  ]
+},
+
    {
     path: "/college-register",
     element: <CollegeRegister />

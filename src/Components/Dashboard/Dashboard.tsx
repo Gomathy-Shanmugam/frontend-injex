@@ -8,7 +8,9 @@ import Sidenav from "./Sidenav";
 import { FaArrowRight } from "react-icons/fa";
 import CollegeSummaryButtons from "./CollegeSummaryButtons";
 import CollegeSummaryCard from "./CollegeSummaryCard";
-
+import PendingRequestCard from "./PendingRequestsCard";
+import UpcomingInterviewsCard from "./UpcomingInterviewsCard";
+import { Outlet } from 'react-router-dom';
 
 type College = {
   name: string;
@@ -33,13 +35,12 @@ type PendingUser = {
   role: string;
 };
 
-
-
 const Dashboard = () => {
   const [requests, setRequests] = useState({ accepted: 0, pending: 0 });
   const [colleges, setColleges] = useState<College[]>([]);
   const [interviews, setInterviews] = useState<Interview[]>([]);
   const [pendingUsers, setPendingUsers] = useState<PendingUser[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     axios.get("/api/requests/count").then((res) => setRequests(res.data));
@@ -48,137 +49,201 @@ const Dashboard = () => {
       setColleges(data);
     });
     axios.get("/api/interviews/upcoming").then((res) => {
-      const data = Array.isArray(res.data) ? res.data : res.data.interviews ?? [];
+      const data = Array.isArray(res.data)
+        ? res.data
+        : res.data.interviews ?? [];
       setInterviews(data);
     });
-    axios.get("http://localhost:5000/api/requests/pending-users").then((res) => {
-      console.log("Pending Users API Response", res.data);
-      const data = Array.isArray(res.data) ? res.data : res.data.pendingUsers ?? [];
-      setPendingUsers(data);
-    });
+    axios
+      .get("http://localhost:5000/api/requests/pending-users")
+      .then((res) => {
+        console.log("Pending Users API Response", res.data);
+        const data = Array.isArray(res.data)
+          ? res.data
+          : res.data.pendingUsers ?? [];
+        setPendingUsers(data);
+      });
   }, []);
-
-
-  useEffect(() => {
-  setPendingUsers([
-    {
-      name: "Sampath Kasirajan",
-      role: "Knitting & Product Development",
-      timeAgo: "4 hours ago",
-      color: "#00B894"
-    },
-    {
-      name: "Firosh",
-      role: "Fashion Designer",
-      timeAgo: "16 hours ago",
-      color: "#A29BFE"
-    },
-    {
-      name: "Roshan",
-      role: "Product Quality Analyst",
-      timeAgo: "3 days ago",
-      color: "#FF7675"
-    },
-     {
-      name: "Roshan",
-      role: "Product Quality Analyst",
-      timeAgo: "3 days ago",
-      color: "#FF7675"
-    }
-  ]);
-}, []);
-
 
   // Safely calculate circle stroke progress
   const accepted = requests.accepted ?? 0;
   const pending = requests.pending ?? 0;
   const total = accepted + pending;
   const percent = total === 0 ? 0 : accepted / total;
-  const dashOffset = 219.91 - percent * 219.91;
+
+  const radius = 40;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - percent);
 
   return (
-  // Inside return(...)
-<>
-  <TopBar />
-  <MainNav />
-  <div className="d-flex">
-    <Sidenav />
-    <div className="dashboard p-4 flex-grow-1">
-      <div className="row">
-        {/* Left Column */}
-        <div className="col-md-8">
-    {/* Cards Row */}
-    <div className="d-flex flex-row flex-wrap justify-content-between gap-3 mb-4">
-      {/* Author/Tutor Requests */}
-      <Card className="text-center p-3 shadow-sm rounded-4 flex-fill" style={{ minWidth: 20, maxWidth: 250, height: 230 }}>
-        <h6 className="text-primary fw-semibold">Author/Tutor Requests</h6>
-        <div className="position-relative d-flex justify-content-center align-items-center" style={{ height: 100 }}>
-          <svg width="80" height="80">
-            <circle cx="40" cy="40" r="35" stroke="#E0E0E0" strokeWidth="5" fill="none" />
-            <circle
-              cx="40"
-              cy="40"
-              r="35"
-              stroke="#007BFF"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="219.91"
-              strokeDashoffset={dashOffset}
-              transform="rotate(-90 40 40)"
-              strokeLinecap="round"
-            />
-          </svg>
-          <div className="position-absolute text-primary fw-bold" style={{ fontSize: "22px" }}>{total}</div>
-        </div>
-        <div className="d-flex justify-content-between px-2 mt-2">
-          <span className="text-primary" style={{ fontSize: "13px" }}>{accepted} <u>Accepted</u></span>
-          <span className="text-secondary" style={{ fontSize: "13px" }}>{pending} <u>Pending</u></span>
-        </div>
-      </Card>
+    // Inside return(...)
+    <>
+      <TopBar />
+      <MainNav />
+      <div className="d-flex">
+        <Sidenav />
 
-      {/* Driven by Injex */}
-<div className="d-flex gap-3 flex-wrap">
- <CollegeSummaryCard/>
+        <div className="dashboard p-0 flex-grow-1 m-0">
+          <div className="row g-0">
+            {/* Left Column */}
+            <div className="col-md-9 px-0">
+              {/* Cards Row */}
+              {/* <div className="d-flex flex-row flex-wrap gap-1 mb-4  flex-fill"> */}
+              <div
+                className="d-flex flex-wrap gap-1 mb-4"
+                style={{
+                  width: "100%",
+                  transition: "all 0.3s ease",
+                  justifyContent: "space-between",
+                  alignItems: "stretch",
+                }}
+              >
+                {/* Author/Tutor Requests */}
+                <div
+                  className="shadow-sm rounded-4"
+                  style={{
+                    flex: "1 1 200px",
+                    minWidth: "180px",
+                    maxWidth: "200px",
+                    height: "250px",
+                  }}
+                >
+                  {/* Author/Tutor Requests */}
+                  <Card
+                    className="author-card text-center p-3 shadow-sm rounded-4"
+                    style={{
+                      flex: "1 1 180px",
+                      minWidth: "150px",
+                      maxWidth: "200px",
+                      height: "250px",
+                      transition: "all 0.3s ease",
+                      marginTop:"20px"
+                    }}
+                  >
+                    <h6 className="text-primary fw-semibold p-1 mt-3">
+                      Author/Tutor Requests
+                    </h6>
+                    <div
+                      className="position-relative d-flex justify-content-center align-items-center"
+                      style={{ height: 200 }}
+                    >
+                      <svg width="120" height="120">
+                        <circle
+                          cx="60"
+                          cy="60"
+                          r="50"
+                          stroke="#E0E0E0"
+                          strokeWidth="5"
+                          fill="none"
+                        />
+                        <circle
+                          cx="60"
+                          cy="60"
+                          r="50"
+                          stroke="#007BFF"
+                          strokeWidth="6"
+                          fill="none"
+                          strokeDasharray="314.16" // 2 * π * 50
+                          strokeDashoffset={dashOffset}
+                          transform="rotate(-90 60 60)"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                      <div
+                        className="position-absolute text-primary fw-bold"
+                        style={{ fontSize: "27px" }}
+                      >
+                        {total}
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-between px-2 mt-3">
+                      <span
+                        className="text-primary"
+                        style={{ fontSize: "13px" }}
+                      >
+                        {accepted} <u>Accepted</u>
+                      </span>
+                      <span
+                        className="text-secondary"
+                        style={{ fontSize: "13px" }}
+                      >
+                        {pending} <u>Pending</u>
+                      </span>
+                    </div>
+                  </Card>
+                </div>
 
+                {/* Driven by Injex */}
+                {/* <div className="d-flex gap-3 flex-wrap" style={{ flex: "2 1 300px", minWidth: "300px" }}>
+                  <CollegeSummaryCard />
+                </div> */}
+                {/* <div
+                  className="shadow-sm rounded-4"
+                  style={{
+                    flex: "1 1 300px", // increased from 300px
+                    minWidth: "250px", // increased from 250px
+                    maxWidth: "350px", // increased from 350px
+                    height: "250px",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  <CollegeSummaryCard />
+                </div> */}
 
-</div>
-    
-      {/* <Card className="p-3 shadow-sm rounded-4 flex-fill" style={{ minWidth: 250, maxWidth: 280, height: 230 }}>
-        <h6>Driven by Injex</h6>
-        <div className="d-flex justify-content-between h-100">
-          <div>
-            <ul className="mb-2 ps-3">
-              {colleges.slice(0, 4).map((college, idx) => (
-                <li key={idx}>{college.name}</li>
-              ))}
-            </ul>
-            <Button variant="primary" size="sm">View All</Button>
-          </div>
-          <div className="display-5 fw-bold text-primary align-self-center text-end">
-            {colleges.length}
-            <br />
-            <span className="fs-6">Colleges</span>
-          </div>
-        </div>
-      </Card> */}
+                {/* College Summary Card */}
+                <div
+                  className="shadow-sm rounded-4"
+                  style={{
+                    flex: "1 1 320px",
+                    minWidth: "280px",
+                    maxWidth: "400px",
+                    height: "250px",
+                    marginTop:"20px"
+                  }}
+                >
+                  <CollegeSummaryCard />
+                </div>
 
-      {/* Upcoming Interviews */}
-      <Card className="p-3 shadow-sm rounded-4 flex-fill" style={{ minWidth: 250, maxWidth: 250, height: 230 }}>
-        <h6>Upcoming Interviews</h6>
-        <ul className="list-unstyled mt-3">
-          {interviews.map((item, idx) => (
-            <li key={idx} className="mt-2">
-              <strong>{item.name}</strong><br />
-              {item.role}<br />
-              {new Date(item.date).toLocaleDateString()} - {item.time}
-            </li>
-          ))}
-        </ul>
-      </Card>
-    </div>
+                {/* Upcoming Interviews */}
+                {/* <Card className="p-3 shadow-sm rounded-4 flex-fill" style={{ minWidth: 270, maxWidth: 250, height: 250 }}> */}
+                {/* <div className="d-flex gap-3 flex-wrap" style={{ flex: "2 1 300px", minWidth: "280px" }}>
 
-          {/* Categories Table */}
-          {/* <Card className="p-3">
+                
+                <UpcomingInterviewsCard />
+                </div> */}
+                {/* <div
+                  className="shadow-sm rounded-4"
+                  style={{
+                    flex: "1 1 300px",
+                    minWidth: "250px",
+                    maxWidth: "400px",
+                    height: "250px",
+                    transition: "all 0.3s ease",
+                  }}
+                >
+                  <UpcomingInterviewsCard />
+                </div> */}
+
+                {/* Upcoming Interviews */}
+                <div
+                  className="shadow-sm rounded-4 "
+                  style={{
+                    flex: "1 1 300px",
+                    minWidth: "260px",
+                    maxWidth: "360px",
+                    height: "250px",
+                    marginTop:"20px",
+                   
+                  }}
+                >
+                  <UpcomingInterviewsCard />
+                </div>
+
+                {/* </Card> */}
+              </div>
+
+              {/* Categories Table */}
+              {/* <Card className="p-3">
             <div className="d-flex justify-content-between mb-3">
               <h6>Categories</h6>
               <div className="tabs">
@@ -215,15 +280,14 @@ const Dashboard = () => {
             <Button variant="primary">View All</Button>
           </Card> */}
 
+              <CollegeSummaryButtons />
 
-          <CollegeSummaryButtons/>
+              {/* <CollegeSummaryButtons /> */}
+            </div>
 
-          {/* <CollegeSummaryButtons /> */}
-        </div>
-
-        {/* Right Column */}
-        <div className="col-md-4">
-          <Card className="p-3 shadow-sm rounded-4 h-100">
+            {/* Right Column */}
+            <div className="col-md-3">
+              {/* <Card className="p-3 shadow-sm rounded-4 h-100">
             <div className="d-flex justify-content-between align-items-center">
               <h6 className="mb-0">{pendingUsers.length} Pending Requests</h6>
               <Button variant="link" className="p-0 text-primary text-decoration-none">View All</Button>
@@ -253,14 +317,14 @@ const Dashboard = () => {
                 </li>
               ))}
             </ul>
-          </Card>
+          </Card> */}
+              <PendingRequestCard />
+            </div>
+            <Outlet/>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</>
-
-
+    </>
   );
 };
 

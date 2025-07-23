@@ -5,5 +5,12 @@
   background-color: #f8f9fa;
   border-radius: 8px;
 }
-
+.author-card{
+  background: linear-gradient(to bottom, #ffffff, #eef5fb);
+  border: none;
+  /* margin-left: 10px;
+  margin-right: 10px; */
+  height: 250px;
+ 
+}
 

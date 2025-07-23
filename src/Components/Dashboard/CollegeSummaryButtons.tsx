@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Table } from "react-bootstrap";
+import { Button, Card, Table, Badge } from "react-bootstrap";
+import "./CollegeSummaryButtons.css";
 
-const CollegeOverviewCard: React.FC = () => {
+const CollegeSummaryButtons: React.FC = () => {
   const [colleges, setColleges] = useState<any[]>([]);
   const [authorCount, setAuthorCount] = useState(0);
   const [tutorCount, setTutorCount] = useState(0);
 
   useEffect(() => {
     const loadColleges = () => {
-      const storedList = localStorage.getItem("colleges"); // ✅ Corrected key
+      const storedList = localStorage.getItem("colleges");
       if (storedList) {
         const parsedList = JSON.parse(storedList);
         setColleges(parsedList);
 
-        // Count based on role (if available)
         const authors = parsedList.filter((c: any) => c.role === "author").length;
         const tutors = parsedList.filter((c: any) => c.role === "tutor").length;
 
@@ -23,37 +23,23 @@ const CollegeOverviewCard: React.FC = () => {
     };
 
     loadColleges();
-
-    // Optional: Auto-refresh when window/tab is focused
     window.addEventListener("focus", loadColleges);
-
-    return () => {
-      window.removeEventListener("focus", loadColleges);
-    };
+    return () => window.removeEventListener("focus", loadColleges);
   }, []);
 
   return (
-    <Card className="p-3">
-      <div className="d-flex justify-content-between mb-3">
-        <h6>Categories</h6>
-        <div className="tabs">
-          <Button variant="light" className="me-2">
-            Colleges <span className="badge bg-primary">{colleges.length}</span>
-          </Button>
-          <Button variant="light" className="me-2">
-            Students <span className="badge bg-primary">{colleges.length }</span>
-          </Button>
-          <Button variant="light" className="me-2">
-            Author's <span className="badge bg-primary">{authorCount}</span>
-          </Button>
-          <Button variant="light">
-            Tutor's <span className="badge bg-primary">{tutorCount}</span>
-          </Button>
-        </div>
+    <Card className="p-4 college-summary-container">
+      <div className="d-flex flex-wrap gap-2 mb-4">
+        <button className="summary-tab active-tab">
+          Colleges <span>{colleges.length}</span>
+        </button>
+        <button className="summary-tab">Students <span>{colleges.length}</span></button>
+        <button className="summary-tab">Author's <span>{authorCount}</span></button>
+        <button className="summary-tab">Tutor's <span>{tutorCount}</span></button>
       </div>
 
-      <Table bordered hover responsive>
-        <thead className="table-light">
+      <Table hover responsive className="custom-table">
+        <thead>
           <tr>
             <th>College Name</th>
             <th>Location</th>
@@ -66,7 +52,7 @@ const CollegeOverviewCard: React.FC = () => {
         <tbody>
           {colleges.length === 0 ? (
             <tr>
-              <td colSpan={6} className="text-center text-muted py-4">
+              <td colSpan={6} className="text-center text-muted py-3">
                 No colleges found.
               </td>
             </tr>
@@ -78,12 +64,14 @@ const CollegeOverviewCard: React.FC = () => {
                 <td>{college.contactPerson}</td>
                 <td>{college.contactNumber}</td>
                 <td>{college.emailId || college.email}</td>
-                <td>
-                  {college.program ? (
-                    <span className="badge bg-danger">{college.program}</span>
-                  ) : (
-                    "-"
-                  )}
+                <td className="d-flex align-items-center justify-content-between">
+                  <Badge
+                    bg={college.program === "Started" ? "success" : "danger"}
+                    className="px-3 py-1 rounded-pill"
+                  >
+                    {college.program || "Not started"}
+                  </Badge>
+                 
                 </td>
               </tr>
             ))
@@ -91,11 +79,11 @@ const CollegeOverviewCard: React.FC = () => {
         </tbody>
       </Table>
 
-      <div className="text-end">
-        <Button variant="primary">View All</Button>
+      <div className="text-start mt-3">
+        <Button variant="primary" className="rounded-pill px-4">View All</Button>
       </div>
     </Card>
   );
 };
 
-export default CollegeOverviewCard;
+export default CollegeSummaryButtons;

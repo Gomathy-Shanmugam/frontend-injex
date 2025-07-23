@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
+import "./CollegeSummaryCard.css"
 
 const CollegeSummaryCard: React.FC = () => {
   const [colleges, setColleges] = useState<{ collegeName: string }[]>([]);
@@ -12,56 +13,43 @@ const CollegeSummaryCard: React.FC = () => {
     }
   }, []);
 
+  
   return (
-    <Card
-      className="shadow-sm rounded-4 p-3 d-flex flex-column justify-content-between"
-      style={{
-        minWidth: 280,
-        maxWidth: 400,
-        height: 230,
-        background: "linear-gradient(90deg, #ffffff 60%, #2563eb 40%)",
-        color: "#111827",
-        overflow: "hidden",
-      }}
-    >
-      <div>
-        <h6 className="fw-bold mb-3 text-primary">Driven by Injex</h6>
-        <ul className="ps-3 mb-3" style={{ listStyleType: "disc" }}>
-          {colleges.slice(0, 4).map((college, index) => (
-            <li
-              key={index}
-              style={{
-                fontSize: "14px",
-                color: "#1f2937",
-                fontWeight: 500,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {college.collegeName}
-            </li>
-          ))}
-        </ul>
-        <Button size="sm" variant="primary">
-          View All
-        </Button>
-      </div>
+  <div className="college-summary-card shadow-sm rounded-4 mb-4 ">
+  <div className="college-info-wrapper">
+    <div className="college-info p-3">
+      <h6 className="fw-bold mb-3 text-primary">Driven by Injex</h6>
+      <ul className="ps-2 mb-3" style={{ listStyleType: "disc" }}>
+        {colleges.slice(0, 4).map((college, index) => (
+          <li
+            key={index}
+            style={{
+              fontSize: "14px",
+              color: "#1f2937",
+              fontWeight: 500,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {college.collegeName}
+          </li>
+        ))}
+      </ul>
+      <Button size="sm" variant="primary" className="rounded-pill px-3">
+        View All
+      </Button>
+    </div>
+  </div>
 
-      <div
-        className="text-white text-end fw-bold"
-        style={{
-          position: "absolute",
-          right: 20,
-          bottom: 20,
-          fontSize: "32px",
-        }}
-      >
-        {colleges.length}
-        <div className="fs-6">Colleges</div>
-      </div>
-    </Card>
-  );
+  <div className="college-count">
+    <div style={{ fontSize: "42px", fontWeight: 600,paddingLeft:'70px' }}>{colleges.length}</div>
+    <div style={{ fontSize: "15px", fontWeight: 500,paddingLeft:'70px' }}>Colleges</div>
+  </div>
+</div>
+
+);
+
 };
 
 export default CollegeSummaryCard;
