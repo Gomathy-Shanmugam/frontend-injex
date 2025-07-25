@@ -24,6 +24,8 @@ const FlipBookUploader: React.FC = () => {
   const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
   const [uploadedVideoFileName, setUploadedVideoFileName] = useState("");
   const [intenseLevel, setIntenseLevel] = useState("");
+  const [showFlipbookSuccessModal, setShowFlipbookSuccessModal] = useState(false);
+
 
   // Video states
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -181,6 +183,7 @@ const FlipBookUploader: React.FC = () => {
     } catch (error) {
       console.error("❌ Error saving flipbook duration:", error);
     }
+     setShowFlipbookSuccessModal(true);
   };
 
   // const handleSaveFlipbook = async () => {
@@ -521,33 +524,7 @@ const FlipBookUploader: React.FC = () => {
                         ×
                       </button>
 
-                      {/* <HTMLFlipBook
-                        width={1000}
-                        height={800}
-                        size="stretch"
-                        minWidth={200}
-                        maxWidth={600}
-                        minHeight={200}
-                        maxHeight={800}
-                        showCover={true}
-                        mobileScrollSupport={true}
-                        flippingTime={600}
-                        className="flip-book"
-                        style={{ boxShadow: "0 0 5px rgba(0,0,0,0.2)" }}
-                        startPage={0}
-                        drawShadow={false}
-                        usePortrait={false}
-                        startZIndex={0}
-                        autoSize={false}
-                        maxShadowOpacity={0}
-                        clickEventForward={false}
-                        useMouseEvents={false}
-                        swipeDistance={0}
-                        showPageCorners={false}
-                        disableFlipByClick={false}
-                      >
-                        {pdfPages}
-                      </HTMLFlipBook> */}
+                     
 
                       <div
                         onClick={() => setIsFullScreen(true)}
@@ -710,94 +687,94 @@ const FlipBookUploader: React.FC = () => {
                         const seconds = video.duration % 60;
 
                         return (
-                          <div
-                            key={index}
-                            className="video-preview-item mb-4 text-center"
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                              border: "1px solid #ddd",
-                              borderRadius: "8px",
-                              padding: "12px",
-                              position: "relative",
-                            }}
-                          >
-                            {/* ❌ Close Button */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleRemoveVideo(index);
-                              }}
-                              style={{
-                                position: "absolute",
-                                top: "8px",
-                                right: "12px",
-                                background: "transparent",
-                                border: "none",
-                                fontSize: "20px",
-                                fontWeight: "bold",
-                                cursor: "pointer",
-                                color: "#999",
-                                zIndex: 2,
-                              }}
-                              aria-label="Remove video"
-                              title="Remove"
-                            >
-                              ×
-                            </button>
+                         <div
+  key={index}
+  className="video-preview-item mb-4 text-center"
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    padding: "12px",
+  }}
+>
+  {/* 🟨 Wrap button + video in this container */}
+  <div
+    style={{
+      position: "relative", // KEY TO OVERLAYING THE CLOSE BUTTON
+      width: "100%",
+      height: "200px",
+      borderRadius: "8px",
+      overflow: "hidden",
+      backgroundColor: "#000",
+    }}
+  >
+    {/* ❌ Close Button ABOVE video */}
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        handleRemoveVideo(index);
+      }}
+      style={{
+        position: "absolute",
+        top: "8px",
+        right: "8px",
+        background: "rgba(0, 0, 0, 0.6)", // gives contrast above video
+        border: "none",
+        fontSize: "18px",
+        fontWeight: "bold",
+        color: "#fff",
+        cursor: "pointer",
+        padding: "4px 8px",
+        borderRadius: "4px",
+        zIndex: 2,
+      }}
+      aria-label="Remove video"
+      title="Remove"
+    >
+      ×
+    </button>
 
-                            {/* Video Container with Click Overlay */}
-                            <div
-                              style={{
-                                width: "100%",
-                                height: "200px",
-                                position: "relative",
-                                borderRadius: "8px",
-                                overflow: "hidden",
-                              }}
-                            >
-                              {/* Video Player */}
-                              <video
-                                className="preview-video-player"
-                                controls
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "contain",
-                                  backgroundColor: "#000",
-                                }}
-                              >
-                                <source src={video.url} type="video/mp4" />
-                                Your browser does not support the video tag.
-                              </video>
+    {/* 🎬 Video Player */}
+    <video
+      className="preview-video-player"
+      controls
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "contain",
+      }}
+    >
+      <source src={video.url} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
 
-                              {/* Fullscreen Click Overlay */}
-                              <div
-                                onClick={() => playVideoFullscreen(video.url)}
-                                style={{
-                                  position: "absolute",
-                                  top: 0,
-                                  left: 0,
-                                  width: "100%",
-                                  height: "100%",
-                                  backgroundColor: "transparent",
-                                  cursor: "pointer",
-                                  zIndex: 1,
-                                }}
-                              />
-                            </div>
+    {/* 🔎 Overlay to enable full screen click */}
+    <div
+      onClick={() => playVideoFullscreen(video.url)}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
+        cursor: "pointer",
+        zIndex: 1,
+      }}
+    />
+  </div>
 
-                            {/* Info */}
-                            <div className="video-info mt-2 text-center">
-                              <div className="video-name fw-semibold">
-                                {video.name}
-                              </div>
-                              <div className="video-duration text-muted small">
-                                Duration: {hours}h {minutes}m {seconds}s
-                              </div>
-                            </div>
-                          </div>
+  {/* ℹ️ Video Info */}
+  <div className="video-info mt-2 text-center">
+    <div className="video-name fw-semibold">{video.name}</div>
+    <div className="video-duration text-muted small">
+      Duration: {hours}h {minutes}m {seconds}s
+    </div>
+  </div>
+</div>
+
                         );
                       })}
                     </div>
@@ -888,6 +865,63 @@ const FlipBookUploader: React.FC = () => {
               </div>
             </div>
           )}
+
+          {showFlipbookSuccessModal && (
+  <div
+    className="modal fade show d-block"
+    style={{
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      zIndex: 1050,
+    }}
+  >
+    <div
+      className="modal-dialog modal-dialog-centered"
+      style={{ zIndex: 1060 }}
+    >
+      <div
+        className="modal-content text-center px-4 py-3"
+        style={{
+          borderRadius: "16px",
+          maxWidth: "400px",
+          margin: "0 auto",
+        }}
+      >
+        <h5 className="mb-3 fw-semibold">Successfully Created</h5>
+
+        <div className="mb-3 d-flex align-items-center justify-content-center">
+          <i className="bi bi-journal-text fs-4"></i>
+          <span
+            className="ms-2 text-primary text-decoration-none"
+            style={{ fontSize: "0.50rem" }}
+          >
+            Lesson: {uploadedFileName || "Flipbook Lesson"}
+          </span>
+        </div>
+
+        <div className="d-flex justify-content-center">
+          <button
+            className="btn btn-warning fw-bold"
+            style={{
+              padding: "6px 30px",
+              fontSize: "0.85rem",
+            }}
+            onClick={() => setShowFlipbookSuccessModal(false)}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
         </Tabs>
       </div>
     </div>
