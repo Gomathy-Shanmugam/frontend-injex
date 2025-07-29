@@ -36,7 +36,7 @@ const CollegeSummaryCard: React.FC = () => {
           </li>
         ))}
       </ul>
-      <Button size="sm" variant="primary" className="rounded-pill px-3">
+      <Button size="sm" variant="primary" className="rounded-pill px-3 ">
         View All
       </Button>
     </div>

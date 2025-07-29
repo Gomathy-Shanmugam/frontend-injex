@@ -19,6 +19,9 @@ import Dashboard from "../Components/Dashboard/Dashboard";
 import CollegeList from "../Components/Dashboard/CollegeList";
 import CollegeRegister from "../Components/Dashboard/CollegeRegister";
 import RegistrationDetails from "../Components/Dashboard/RegistrationDetails";
+import CollegeOverview from "../Components/Dashboard/CollegeOverview";
+import StudentOverview from "../Components/Dashboard/StudentsOverview";
+import MasterPipeline from "../Components/Master/MaterPipeline";
 
 
 
@@ -117,6 +120,21 @@ const AppRoute: RouteObject[] = [
    {
     path: "/colleges",
     element: <CollegeList />
+    
+  }, 
+  {
+    path: "/college-overview",
+    element: <CollegeOverview />
+    
+  },
+  {
+    path: "/student-overview",
+    element: <StudentOverview />
+    
+  },
+   {
+    path: "/master-pipeline",
+    element: <MasterPipeline />
     
   }
 ]

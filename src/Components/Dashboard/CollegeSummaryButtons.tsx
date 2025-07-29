@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Table, Badge } from "react-bootstrap";
+import { Navigate, useNavigate } from "react-router-dom";
+import Courseview from "./CollegeOverview"
 import "./CollegeSummaryButtons.css";
 
 const CollegeSummaryButtons: React.FC = () => {
+
+   const navigate = useNavigate();
   const [colleges, setColleges] = useState<any[]>([]);
   const [authorCount, setAuthorCount] = useState(0);
   const [tutorCount, setTutorCount] = useState(0);
@@ -67,7 +71,7 @@ const CollegeSummaryButtons: React.FC = () => {
                 <td className="d-flex align-items-center justify-content-between">
                   <Badge
                     bg={college.program === "Started" ? "success" : "danger"}
-                    className="px-3 py-1 rounded-pill"
+                    className="px-4 py-2 mt-3 rounded-pill"
                   >
                     {college.program || "Not started"}
                   </Badge>
@@ -80,7 +84,7 @@ const CollegeSummaryButtons: React.FC = () => {
       </Table>
 
       <div className="text-start mt-3">
-        <Button variant="primary" className="rounded-pill px-4">View All</Button>
+        <Button variant="primary" className="rounded-pill px-4" onClick={()=>navigate("/college-overview")}>View All</Button>
       </div>
     </Card>
   );

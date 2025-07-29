@@ -74,7 +74,7 @@ const Sidenav = ({ activeItem = "dashboard", onItemClick }: SidenavProps) => {
     { id: "course-catalog", label: "Course Catalog", icon: GraduationIcon, path: "/course-catalog" },
     { id: "colleges", label: "Placements", icon: BuildingIcon, path: "/colleges" },
     { id: "instructors", label: "Grade & Rubrics", icon: UsersIcon, path: "/instructors" },
-    { id: "settings", label: "Settings", icon: SettingsIcon, path: "/settings" },
+    { id: "settings", label: "Settings", icon: SettingsIcon, path: "/master-pipeline" },
   ];
 
   const handleItemClick = (itemId: string, path: string) => {
@@ -155,7 +155,7 @@ const Sidenav = ({ activeItem = "dashboard", onItemClick }: SidenavProps) => {
 
 const sidebarStyles = {
   sidebar: {
-    height: "100vh",
+    minHeight: "100vh",
     background: "#fff",
     borderRight: "1px solid #e5e7eb",
     display: "flex",

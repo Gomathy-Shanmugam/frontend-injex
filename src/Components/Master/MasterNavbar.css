@@ -1,0 +1,30 @@
+.master-navbar {
+  width: 230px; /* increased width */
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.sidebar-link {
+  font-size: 14px; /* reduced font size */
+  color: #555;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  padding-left: 16px;
+}
+
+.sidebar-link.active {
+  color: #fcb900; /* yellow font for active */
+  font-weight: 500;
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 4px;
+  height: 18px;
+  background-color: #fcb900; /* yellow line */
+  border-radius: 4px;
+}

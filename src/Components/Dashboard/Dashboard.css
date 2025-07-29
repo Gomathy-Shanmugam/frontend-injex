@@ -1,4 +1,4 @@
-.pending-list li {
+/* .pending-list li {
   transition: all 0.2s ease-in-out;
 }
 .pending-list li:hover {
@@ -8,9 +8,69 @@
 .author-card{
   background: linear-gradient(to bottom, #ffffff, #eef5fb);
   border: none;
-  /* margin-left: 10px;
-  margin-right: 10px; */
+ 
   height: 250px;
  
+} */
+
+.card-wrapper {
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+.card-wrapper > div {
+  flex: 1 1 300px;
+  max-width: 33.333%;
+  min-width: 260px;
+  transition: all 0.3s ease;
 }
 
+
+.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (max-width: 992px) {
+  .card-wrapper > div {
+    max-width: 100%;
+  }
+}
+
+
+
+/* Tablet: 2 cards per row */
+@media (min-width: 576px) and (max-width: 991px) {
+  .card-wrapper > div {
+    flex: 1 1 calc(50% - 0.5rem);
+    max-width: calc(50% - 0.5rem);
+  }
+}
+
+/* Small Desktop: 3 cards per row */
+@media (min-width: 992px) {
+  .card-wrapper > div {
+    flex: 1 1 calc(33.33% - 0.5rem);
+    max-width: calc(33.33% - 0.5rem);
+  }
+}
+
+/* Large Desktop with sidebar */
+@media (min-width: 1200px) {
+  .dashboard-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 24px;
+  }
+
+  .left-col {
+    width: 75%;
+  }
+
+  .right-col {
+    width: 25%;
+  }
+}

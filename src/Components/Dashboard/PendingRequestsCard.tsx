@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 import { FaArrowRight } from 'react-icons/fa';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Link } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -11,6 +12,7 @@ interface User {
   role: string;
   createdAt: string;
   avatarUrl?: string;
+  email: string;
 }
 
 const getInitial = (name: string) => name.charAt(0).toUpperCase();
@@ -20,27 +22,32 @@ const dummyUsers: User[] = [
     name: 'Ananya Sharma',
     role: 'Student',
     createdAt: dayjs().subtract(2, 'hour').toISOString(),
-    avatarUrl: 'https://randomuser.me/api/portraits/women/1.jpg'
+    avatarUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
+    email: 'ananya@gmail.com'
   },
   {
     name: 'Rahul Verma',
     role: 'Faculty',
-    createdAt: dayjs().subtract(1, 'day').toISOString()
+    createdAt: dayjs().subtract(1, 'day').toISOString(),
+    email: 'rahul@gmail.com'
   },
   {
     name: 'Priya Kumar',
     role: 'Admin',
-    createdAt: dayjs().subtract(3, 'day').toISOString()
+    createdAt: dayjs().subtract(3, 'day').toISOString(),
+    email: 'priya@gmail.com'
   },
    {
     name: 'Priya Kumar',
     role: 'Admin',
-    createdAt: dayjs().subtract(3, 'day').toISOString()
+    createdAt: dayjs().subtract(3, 'day').toISOString(),
+    email: 'kumar@gmail.com'
   },
    {
     name: 'Priya Kumar',
     role: 'Admin',
-    createdAt: dayjs().subtract(3, 'day').toISOString()
+    createdAt: dayjs().subtract(3, 'day').toISOString(),
+    email: 'priyakumar@gmail.com'
   }
 ];
 
@@ -78,9 +85,12 @@ const PendingRequestCard: React.FC = () => {
           <div className="flex-grow-1">
             <div className="fw-semibold">{user.name}</div>
             <div className="text-muted small">{user.role}</div>
-            <a href="#" className="text-primary text-decoration-none d-inline-flex align-items-center small fw-semibold">
-              View Registration Details <FaArrowRight className="ms-1" />
-            </a>
+           <Link
+  to={`/dashboard/registration/${user.email}`}
+  className="text-primary text-decoration-none d-inline-flex align-items-center small fw-semibold"
+>
+  View Registration Details <FaArrowRight className="ms-1" />
+</Link>
             <div className="text-muted small mt-1">{dayjs(user.createdAt).fromNow()}</div>
           </div>
         </div>

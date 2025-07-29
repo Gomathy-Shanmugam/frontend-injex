@@ -1,0 +1,112 @@
+/* Tabs */
+.summary-tab {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 20px;
+  color: #3a19b3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.summary-tab span {
+  background-color: #007bff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.summary-tab:hover {
+  background-color: #4573E7;
+}
+
+.summary-tab.active-tab {
+  background-color: #4573e7;
+  color: white;
+}
+
+/* Responsive Tabs & Filters Container */
+.tab-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@media (max-width: 990px) {
+  .summary-tab {
+    font-size: 13px;
+    padding: 6px 12px;
+    flex: 1 1 45%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .summary-tab {
+    flex: 1 1 100%;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .tab-filter-container {
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 450px) {
+  .summary-tab {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .summary-tab span {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+}
+
+/* Table */
+.custom-table thead th {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.custom-table tbody td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  vertical-align: middle;
+}
+
+.custom-table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.custom-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Make table horizontally scrollable on small screens */
+@media (max-width: 700px) {
+  .custom-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .custom-table th,
+  .custom-table td {
+    min-width: 150px;
+  }
+}

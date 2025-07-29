@@ -1,4 +1,4 @@
-.college-summary-card {
+/* .college-summary-card {
   position: relative;
   display: flex;
   background: linear-gradient(to bottom, #ffffff, #eef5fb);
@@ -6,12 +6,33 @@
   border-radius: 1.5rem;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+} */
+
+
+.college-summary-card {
+  position: relative;
+  display: flex;
+  /* flex-direction: column; */
+  background: linear-gradient(to bottom, #ffffff, #eef5fb);
+  height: 100%; /* Make it take height from parent */
+  width: 100%;  /* Fill wrapper but respect max-width */
+  max-width: 400px; /* ✅ Prevent stretching too much */
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding-left: 0 !important
 }
 
 .college-info-wrapper {
   flex: 1;
-  padding-right: 200px; /* gives space for blue overlap */
+  padding-right: 130px; /* gives space for blue overlap */
 }
+
+.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 
 .college-count {
   position: absolute;
@@ -29,4 +50,49 @@ width: 240px;
   align-items: center;
 
   z-index: 2;
+}
+
+
+@media (max-width: 575.98px) {
+  .college-summary-container .d-flex {
+    flex-direction: column;
+  }
+
+  .custom-table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .custom-table thead,
+  .custom-table tbody,
+  .custom-table tr,
+  .custom-table td,
+  .custom-table th {
+    display: block;
+    width: max-content;
+    min-width: 600px;
+  }
+
+  .summary-tab {
+    width: 100%;
+  }
+}
+
+/* Tablet view (576px - 991px): wrap tabs, full-width table */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .summary-tab {
+    flex: 1 1 calc(50% - 0.5rem);
+  }
+}
+
+/* Desktop view (≥992px): everything fits in line */
+@media (min-width: 992px) {
+  .summary-tab {
+    flex: none;
+  }
+
+  .custom-table {
+    width: 100%;
+  }
 }
