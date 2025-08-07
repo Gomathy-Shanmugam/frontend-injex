@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './MasterNavbar.css';
+import MasterPipeline from './MaterPipeline';
 
 const MasterNavbar: React.FC = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const MasterNavbar: React.FC = () => {
   const menuItems = [
     { label: 'Analytics', path: '/settings/analytics' },
     { label: 'Course Settings', path: '/settings/course-settings' },
-    { label: 'Masters', path: '#' }, // stays on same page
+    { label: 'Masters', path: '/master-pipeline' }, // stays on same page
   ];
 
   const handleClick = (item: { label: string; path: string }) => {
