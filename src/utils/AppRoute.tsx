@@ -22,13 +22,7 @@ import RegistrationDetails from "../Components/Dashboard/RegistrationDetails";
 import CollegeOverview from "../Components/Dashboard/CollegeOverview";
 import StudentOverview from "../Components/Dashboard/StudentsOverview";
 import MasterPipeline from "../Components/Master/MaterPipeline";
-import AppAdminModule from "../Components/Master/AppAdminModule";
-import AppAdminDropdown from "../Components/Master/AppAdminDropdown";
-import AppAdminDropdownOption from "../Components/Master/AppAdminDropdownOption";
 
-import ModuleList from "../Components/Master/ModuleView";
-import DropdownList from "../Components/Master/DropdownView";
-import OptionList from "../Components/Master/OptionView";
 import ModuleView from "../Components/Master/ModuleView";
 import DropdownView from "../Components/Master/DropdownView";
 import OptionView from "../Components/Master/OptionView";
@@ -63,30 +57,24 @@ const AppRoute: RouteObject[] = [
   { path: "/colleges", element: <CollegeList /> },
   { path: "/college-overview", element: <CollegeOverview /> },
   { path: "/student-overview", element: <StudentOverview /> },
-  { path: "/master-pipeline", element: <MasterPipeline /> },
-  { path: "/appadmin-module", element: <AppAdminModule /> },
-  { path: "/course-category", element: <AppAdminDropdown /> },
-  {
-    path: "/appadmindropdown-option",
-    element: (
-      <AppAdminDropdownOption
-        showModal={false}
-        onClose={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        dropdownName={""}
-      />
-    ),
-  },
 
-  // Drill-down Master Pipeline Routes
+  // ------------------Masters-----------------
+
+  { path: "/master-pipeline", element: <MasterPipeline /> },
   { path: "/pipeline/:pipelineId", element: <ModuleView /> },
   { path: "/pipeline/:pipelineId/module/:moduleId", element: <DropdownView /> },
   {
     path: "/pipeline/:pipelineId/module/:moduleId/:dropdownId",
-    element: <OptionView dropdownId={""} moduleId={""} pipelineId={""} onClose={function (): void {
-      throw new Error("Function not implemented.");
-    } } />,
+    element: (
+      <OptionView
+        dropdownId={""}
+        moduleId={""}
+        pipelineId={""}
+        onClose={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    ),
   },
 ];
 

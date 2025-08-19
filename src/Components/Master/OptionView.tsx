@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ModalWrapper from "../Common/ModalWrapper";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import axios from "axios";
 
 interface Option {
   id: number;
@@ -40,28 +40,30 @@ const OptionView: React.FC<OptionViewProps> = ({
       try {
         setLoading(true);
 
-        // Simulated fetch — replace with API later
-        const data: Option[] = [
-          { id: 1, value: "Fashion FundamentalsApparel", enabled: true },
-          {
-            id: 2,
-            value: "Construction Costume Design & Styling",
-            enabled: true,
-          },
-          { id: 3, value: "Fashion Illustration & CAD Surface", enabled: true },
-          { id: 4, value: "Ornamentation Fashion Business", enabled: false },
-        ];
+        // API call (backend la /api/dropdown/:id route irukkanum)
+        const res = await axios.get(`/api/dropdown/${dropdownId}`);
 
-        setOptions(data);
+        const fetchedOptions = res.data.options.map(
+          (opt: any, idx: number) => ({
+            id: idx, // unique client-side id
+            value: typeof opt === "string" ? opt : opt.value, // backend string case handle
+            enabled: typeof opt === "string" ? true : opt.enabled ?? true, // default enabled
+          })
+        );
+
+        setOptions(fetchedOptions);
       } catch (error) {
         console.error("Failed to fetch options", error);
+        toast.error("Failed to load options.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOptions();
-  }, [dropdownId, moduleId, pipelineId]);
+    if (dropdownId) {
+      fetchOptions();
+    }
+  }, [dropdownId]);
 
   const handleToggle = (id: number) => {
     setOptions((prev) =>
@@ -92,38 +94,34 @@ const OptionView: React.FC<OptionViewProps> = ({
     setDeleteId(id);
   };
 
-  const handleConfirmedDelete = () => {
+  const handleConfirmedDelete = async () => {
     if (deleteId !== null) {
-      setOptions((prev) => prev.filter((opt) => opt.id !== deleteId));
-      if (editableId === deleteId) setEditableId(null);
-      setDeleteId(null);
-      setDeleteSuccess(true);
+      try {
+        await axios.delete(`/api/dropdown/${dropdownId}/option/${deleteId}`);
+        setOptions((prev) => prev.filter((_, idx) => idx !== deleteId)); // filter by index
         toast.success("Deleted successfully!");
-      setShowDeleteConfirm(false);
-      
-
-      setTimeout(() => {
-        setDeleteSuccess(false);
-      }, 2000);
+      } catch (error) {
+        console.error("Failed to delete option", error);
+        toast.error("Failed to delete option.");
+      } finally {
+        setDeleteId(null);
+        setShowDeleteConfirm(false);
+      }
     }
   };
 
   const handleSave = async () => {
     try {
-      console.log("Submitting updated options:", options);
-      // You'd call your API here
-      // await fetch('/api/...', {
-      //   method: 'POST',
-      //   body: JSON.stringify(options),
-      //   headers: { 'Content-Type': 'application/json' }
-      // });
-      // navigate(`/option-view/${dropdownId}`);
+      await axios.patch(`/api/dropdown/${dropdownId}`, {
+        options: options.map((opt) => opt.value), // ✅ only string
+      });
 
-      alert("Options updated successfully!");
+      toast.success("Options updated successfully!");
       setEditableId(null);
-      onClose(); // Close modal after saving
+      onClose();
     } catch (error) {
-      alert("Failed to save changes.");
+      console.error("Failed to save options", error);
+      toast.error("Failed to save changes.");
     }
   };
 
@@ -154,13 +152,15 @@ const OptionView: React.FC<OptionViewProps> = ({
         </div>
 
         <div className="option-list">
-          {options.map((option) => (
+          {options.map((option, index) => (
             <div className="option-item" key={option.id}>
               <span className="drag-icon">☰</span>
 
               <input
                 type="text"
-                className="option-input"
+                className={`option-input ${
+                  editableId === option.id ? "editing" : ""
+                }`}
                 value={option.value}
                 disabled={editableId !== option.id}
                 onChange={(e) => handleInputChange(option.id, e.target.value)}
@@ -189,7 +189,7 @@ const OptionView: React.FC<OptionViewProps> = ({
                 className="delete-icon"
                 onClick={() => {
                   setShowDeleteConfirm(true);
-                  confirmDelete(option.id);
+                  confirmDelete(index); // ✅ index now available
                 }}
               >
                 <i className="bi bi-trash" style={{ cursor: "pointer" }}></i>

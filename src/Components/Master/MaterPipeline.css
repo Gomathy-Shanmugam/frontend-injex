@@ -1,26 +1,22 @@
 /* ✅ Remove vertical lines, keep row lines */
 .pipeline-table {
   border-collapse: collapse;
-  
 }
 
 .pipeline-table thead th,
 .pipeline-table tbody td {
   border-left: none !important;
   border-right: none !important;
-  
 }
 
 .pipeline-table tbody tr {
   border-bottom: 1px solid #dee2e6; /* subtle horizontal line */
-  
 }
 
 .pipeline-table tbody tr td {
   padding-top: 14px;
   padding-bottom: 14px;
 }
-
 
 .arrow-icon-circle {
   display: inline-flex;
@@ -38,10 +34,8 @@
 }
 
 .arrow-icon-circle:hover {
-  
-  color:black;
+  color: black;
 }
-
 
 /* Optional: Status badge style */
 .status-badge {
@@ -52,18 +46,14 @@
   font-size: 13px;
 }
 
-
 .view-btn {
-  color: #000;
+  color: blue;
 }
 
-
-.table-header-row th{
+.table-header-row th {
   background-color: rgb(3, 42, 169) !important;
   color: white;
 }
-
-
 
 .modal-backdrop {
   position: fixed;
@@ -78,7 +68,6 @@
   justify-content: center;
   align-items: center;
 }
-
 
 @media (max-width: 768px) {
   .pipeline-table {

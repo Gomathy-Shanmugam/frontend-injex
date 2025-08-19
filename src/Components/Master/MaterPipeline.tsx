@@ -1,96 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaChevronRight, FaArrowRight } from "react-icons/fa";
+import { FaChevronRight, FaArrowRight, FaEdit } from "react-icons/fa";
 import TopBar from "../Common/Topbar";
 import MainNav from "../Common/MainNav";
 import MasterNav from "./MasterNav";
 import "./MaterPipeline.css";
 
+// import axios from "axios";
+import axios, { AxiosError } from "axios";
+
 // PipelineItem interface defined outside to reuse
-interface PipelineItem {
-  id: string;
+interface CreatePipelineItem {
+  _id: string;
   name: string;
-  modules: number;
-  created: string;
-  by: string;
   status: string;
+  createdby?: string;
+  createdon: string;
+  updatedAt?: string;
+  noOfMod: number;
 }
-
-const today = new Date().toLocaleDateString("en-GB");
-
-// Default data used for initial state
-const defaultData: PipelineItem[] = [
-  {
-    id: "app-admin",
-    name: "App Admin",
-    modules: 7,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-  {
-    id: "college-admin",
-    name: "College Admin",
-    modules: 4,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-  {
-    id: "college-faculty",
-    name: "College Faculty",
-    modules: 3,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-  {
-    id: "students",
-    name: "Student's",
-    modules: 4,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-  {
-    id: "author",
-    name: "Author",
-    modules: 3,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-  {
-    id: "tutor",
-    name: "Tutor",
-    modules: 3,
-    created: today,
-    by: "Admin",
-    status: "Active",
-  },
-];
 
 const MasterPipeline: React.FC = () => {
   const navigate = useNavigate();
 
-  const [pipelineData, setPipelineData] = useState<PipelineItem[]>(() => {
-    const saved = localStorage.getItem("pipelineData");
-    return saved ? JSON.parse(saved) : defaultData;
-  });
+  const [pipelineData, setPipelineData] = useState<CreatePipelineItem[]>([]);
 
   const [showForm, setShowForm] = useState(false);
   const [newPipeline, setNewPipeline] = useState<{
+    noOfMod: number;
     name: string;
     status: string;
   }>({
     name: "",
     status: "Active",
+    noOfMod: 0,
   });
+  const [editRowId, setEditRowId] = useState<string | null>(null);
+  const [editedName, setEditedName] = useState<string>("");
+  const [editedStatus, setEditedStatus] = useState<string>("Active");
+
+  // Fetch pipelines from backend
+  const fetchPipelines = async () => {
+    try {
+      const res = await axios.get(`/api/pipeline/`);
+      setPipelineData(res.data);
+    } catch (error) {
+      console.error("Error fetching pipelines:", error);
+    }
+  };
 
   useEffect(() => {
-    localStorage.setItem("pipelineData", JSON.stringify(pipelineData));
-  }, [pipelineData]);
+    fetchPipelines();
+  }, []);
 
   const handleViewClick = (id: string) => {
     navigate(`/pipeline/${id}`);
@@ -112,21 +74,42 @@ const MasterPipeline: React.FC = () => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!newPipeline.name.trim()) return;
 
-    const newEntry: PipelineItem = {
-      id: newPipeline.name.toLowerCase().replace(/\s+/g, "-"),
-      name: newPipeline.name,
-      modules: 0,
-      created: today,
-      by: "Admin",
-      status: newPipeline.status,
-    };
+    try {
+      const res = await axios.post(`/api/pipeline`, {
+        name: newPipeline.name,
+        status: newPipeline.status,
+      });
 
-    setPipelineData((prev) => [...prev, newEntry]);
-    setNewPipeline({ name: "", status: "Active" });
-    setShowForm(false);
+      setPipelineData((prev) => [...prev, res.data]); // append the newly created pipeline
+      setNewPipeline({ name: "", status: "Active", noOfMod: 0 });
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error creating pipeline:", error);
+    }
+  };
+
+  const handleEditClick = (item: CreatePipelineItem) => {
+    setEditRowId(item._id);
+    setEditedName(item.name);
+    setEditedStatus(item.status);
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    try {
+      const res = await axios.patch(`/api/pipeline/${id}`, {
+        name: editedName,
+        status: editedStatus,
+      });
+      setPipelineData((prev) =>
+        prev.map((item) => (item._id === id ? res.data : item))
+      );
+      setEditRowId(null);
+    } catch (error) {
+      console.error("Error updating pipeline:", error);
+    }
   };
 
   return (
@@ -189,25 +172,69 @@ const MasterPipeline: React.FC = () => {
                   <th>Created On</th>
                   <th>Created by</th>
                   <th>Status</th>
-                  <th>View</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {pipelineData.map((item: PipelineItem, idx: number) => (
-                  <tr key={idx}>
+                {pipelineData.map((item: CreatePipelineItem, idx: number) => (
+                  <tr key={item._id}>
                     <td>{idx + 1}</td>
-                    <td>{item.name}</td>
-                    <td>{item.modules}</td>
-                    <td>{item.created}</td>
-                    <td>{item.by}</td>
+
+                    {/* Editable Pipeline Name */}
+                    <td>
+                      {editRowId === item._id ? (
+                        <Form.Control
+                          type="text"
+                          value={editedName ?? ""}
+                          onChange={(e) => setEditedName(e.target.value)}
+                          style={{ width: "200px" }}
+                        />
+                      ) : (
+                        item.name
+                      )}
+                    </td>
+
+                    {/* Non-editable Modules */}
+                    <td>{item.noOfMod}</td>
+
+                    <td>
+                      {item.createdon
+                        ? new Date(item.createdon).toLocaleDateString("en-GB") // show updated date if available
+                        : "-"}
+                    </td>
+
+                    <td>{item.createdby || "Admin"}</td>
                     <td>
                       <span className="status-badge">{item.status}</span>
                     </td>
-                    <td>
+
+                    {/* Actions (View, Edit, Save) */}
+                    <td className="d-flex justify-content-center gap-2">
+                      {/* View Button */}
+
+                      {/* Edit / Save Button */}
+                      {editRowId === item._id ? (
+                        <Button
+                          variant="link"
+                          className="view-btn p-0"
+                          onClick={() => handleSaveEdit(item._id)}
+                        >
+                          ✅
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="link"
+                          className=" p-0"
+                          onClick={() => handleEditClick(item)}
+                        >
+                          <FaEdit size={16} />
+                        </Button>
+                      )}
+
                       <Button
                         variant="link"
                         className="view-btn p-0"
-                        onClick={() => handleViewClick(item.id)}
+                        onClick={() => handleViewClick(item._id)}
                       >
                         <span className="arrow-icon-circle">
                           <FaArrowRight size={10} />

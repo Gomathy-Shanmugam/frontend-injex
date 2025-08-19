@@ -6,61 +6,18 @@ import MainNav from "../Common/MainNav";
 import MasterNav from "./MasterNav";
 import { FaChevronRight, FaEye } from "react-icons/fa";
 import OptionView from "./OptionView"; // Adjust path if needed
+import axios from "axios";
 
 interface DropdownData {
-  id: string;
+  _id: string;
   name: string;
   options: number;
-  createdOn: string;
-  createdBy: string;
+  createdon: string;
+  createdby: string;
   status: string;
-}
 
-const today = new Date().toLocaleDateString("en-GB");
-const dummyDropdowns: Record<string, DropdownData[]> = {
-  1: [
-    {
-      id: "role",
-      name: "Role Type",
-      options: 3,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-    {
-      id: "college",
-      name: "College List",
-      options: 5,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-    {
-      id: "college",
-      name: "College List",
-      options: 5,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-    {
-      id: "college",
-      name: "College List",
-      options: 5,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-    {
-      id: "college",
-      name: "College List",
-      options: 5,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-  ],
-};
+  updatedAt?: string;
+}
 
 const DropdownView = () => {
   const { moduleId, pipelineId } = useParams();
@@ -70,11 +27,28 @@ const DropdownView = () => {
     null
   );
   const navigate = useNavigate();
+
+  const fetchDropdowns = async () => {
+    try {
+      const res = await axios.get(`/api/dropdown/module/${moduleId}`);
+      const data = Array.isArray(res.data) ? res.data : [];
+      setDropdowns(data);
+    } catch (err) {
+      console.error("Error fetching dropdowns:", err);
+    }
+  };
+
   useEffect(() => {
-    if (moduleId && dummyDropdowns[moduleId]) {
-      setDropdowns(dummyDropdowns[moduleId]);
+    if (moduleId) {
+      fetchDropdowns();
     }
   }, [moduleId]);
+
+  // useEffect(() => {
+  //   if (moduleId && dummyDropdowns[moduleId]) {
+  //     setDropdowns(dummyDropdowns[moduleId]);
+  //   }
+  // }, [moduleId]);
 
   const handleViewClick = (dropdownId: string) => {
     setSelectedDropdownId(dropdownId);
@@ -104,40 +78,46 @@ const DropdownView = () => {
             </Button>
           </div>
 
-<div className="table-wrapper">
-          <Table hover className="dropdown-view">
-            <thead>
-              <tr className="table-header-row">
-                <th>S.No</th>
-                <th>Dropdown Name</th>
-                <th>CreatedOn</th>
-                <th>CreatedBy</th>
-                <th>Status</th>
-                <th>View & Edit</th>
-              </tr>
-            </thead>
-          <tbody>
-  {dropdowns.map((drop, idx) => (
-    <tr key={`${drop.id}-${idx}`}>
-      <td data-label="S.No">{idx + 1}</td>
-      <td data-label="Dropdown Name">{drop.name}</td>
-      <td data-label="Created On">{drop.createdOn}</td>
-      <td data-label="Created By">{drop.createdBy}</td>
-      <td data-label="Status">
-        <span className="status-badge">{drop.status}</span>
-      </td>
-      <td data-label="View & Edit">
-        <FaEye
-          style={{ cursor: "pointer", fontSize: "1.2rem" }}
-          onClick={() => handleViewClick(drop.id)}
-        />
-      </td>
-    </tr>
-  ))}
-</tbody>
+          <div className="table-wrapper">
+            <Table hover className="dropdown-view">
+              <thead>
+                <tr className="table-header-row">
+                  <th>S.No</th>
+                  <th>Dropdown Name</th>
+                  <th>CreatedOn</th>
+                  <th>CreatedBy</th>
+                  <th>Status</th>
+                  <th>View & Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dropdowns.map((drop, idx) => (
+                  <tr key={`${drop._id}-${idx}`}>
+                    <td data-label="S.No">{idx + 1}</td>
+                    <td data-label="Dropdown Name">{drop.name}</td>
 
-          </Table>
-        </div>
+                    <td data-label="Created On">
+                      {drop.createdon
+                        ? new Date(drop.createdon).toLocaleDateString("en-GB") // show updated date if available
+                        : "-"}
+                    </td>
+
+                    <td data-label="Created By">{drop.createdby}</td>
+
+                    <td data-label="Status">
+                      <span className="status-badge">{drop.status}</span>
+                    </td>
+                    <td data-label="View & Edit">
+                      <FaEye
+                        style={{ cursor: "pointer", fontSize: "1.2rem" }}
+                        onClick={() => handleViewClick(drop._id)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </div>
       </div>
 

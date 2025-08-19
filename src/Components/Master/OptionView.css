@@ -168,7 +168,7 @@ input:checked + .slider:before {
   padding: 1.5rem 2rem;
   border-radius: 12px;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   max-width: 320px;
   z-index: 1300;
 }
@@ -207,6 +207,12 @@ input:checked + .slider:before {
   flex-wrap: wrap; /* for small screens */
 }
 
+/* .option-input.editing {
+  border: 1px solid #f1c40f;
+  outline: none;
+  background-color: #fffde7;
+} */
+
 /* Input, icons, and switch spacing reset */
 .option-item .option-input {
   flex: 1;
@@ -237,8 +243,6 @@ input:checked + .slider:before {
     align-self: flex-end;
   }
 }
-
-
 
 /* 📱 Mobile Responsive (< 450px) */
 @media (max-width: 450px) {

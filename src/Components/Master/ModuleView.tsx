@@ -1,118 +1,145 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import TopBar from "../Common/Topbar";
 import MainNav from "../Common/MainNav";
 import "./ModuleView.css";
 import MasterNav from "./MasterNav";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaEdit } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa";
+import axios from "axios";
 
 interface ModuleData {
-  id: number;
+  _id: string;
   name: string;
   dropdowns: number;
-  createdOn: string;
-  createdBy: string;
+  createdon: string;
+  createdBy?: string;
+  updatedAt?: string;
   status: string;
+  noOfdropdown: number;
 }
 
-const today = new Date().toLocaleDateString("en-GB");
-// 🔁 Dummy module data (keyed by numeric ID string)
-const dummyModules: Record<string, ModuleData[]> = {
-  "1": [
-    {
-      id: 1,
-      name: "College Admin Signup",
-      dropdowns: 2,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Rubrics",
-      dropdowns: 2,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-  ],
-  "2": [
-    {
-      id: 1,
-      name: "Student Registration",
-      dropdowns: 2,
-      createdOn: today,
-      createdBy: "Admin",
-      status: "Active",
-    },
-  ],
-};
-
 // ✅ Map slug to actual numeric ID
-const slugToIdMap: Record<string, string> = {
-  "app-admin": "1",
-  students: "2",
-};
+// const slugToIdMap: Record<string, string> = {
+//   "app-admin": "1",
+//   students: "2",
+// };
 
 const ModuleView = () => {
   const { pipelineId } = useParams();
   const navigate = useNavigate();
   const [modules, setModules] = useState<ModuleData[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [editRowId, setEditRowId] = useState<string | null>(null);
+  const [editedName, setEditedName] = useState<string>("");
+  const [pipelineData, setPipelineData] = useState<
+    { _id: string; name: string; noOfdropdown: string }[]
+  >([]);
+
   const [newModule, setNewModule] = useState({
     pipeline: "",
     name: "",
-    status: "",
+    status: "Active",
+    noOfdropdown: 0,
   });
 
   useEffect(() => {
-    if (!pipelineId) return;
+    const fetchAllModules = async () => {
+      try {
+        const res = await axios.get(`/api/module/pipeline/${pipelineId}`);
+        const modulesWithDropdowns = await Promise.all(
+          res.data.map(async (mod: ModuleData) => {
+            const dropdownRes = await axios.get(
+              `/api/dropdown/module/${mod._id}`
+            );
+            return {
+              ...mod,
+              noOfdropdown: dropdownRes.data.length,
+            };
+          })
+        );
+        setModules(modulesWithDropdowns);
+      } catch (err) {
+        console.error("Error fetching modules or dropdowns:", err);
+      }
+    };
 
-    const actualId = slugToIdMap[pipelineId] || pipelineId;
-
-    const savedModules = localStorage.getItem(`modules-${actualId}`);
-    if (savedModules) {
-      setModules(JSON.parse(savedModules));
-    } else {
-      const moduleList = dummyModules[actualId];
-      setModules(moduleList || []);
-    }
+    fetchAllModules();
   }, [pipelineId]);
 
-  const handleViewClick = (moduleId: number) => {
-    const actualId = slugToIdMap[pipelineId!] || pipelineId;
-    navigate(`/pipeline/${actualId}/module/${moduleId}`);
+  useEffect(() => {
+    const fetchPipelines = async () => {
+      try {
+        const res = await axios.get("/api/pipeline");
+        setPipelineData(
+          res.data.map((p: any) => ({
+            ...p,
+            _id: p._id.toString(),
+          }))
+        );
+      } catch (err) {
+        console.error("Error fetching pipelines:", err);
+      }
+    };
+    fetchPipelines();
+  }, []);
+
+  const handleViewClick = (moduleId: string) => {
+    navigate(`/pipeline/${pipelineId}/module/${moduleId}`);
   };
 
-  const handleSaveModule = () => {
-    const actualId = slugToIdMap[pipelineId!] || pipelineId;
+  const handleEditClick = (module: ModuleData) => {
+    setEditRowId(module._id.toString());
+    setEditedName(module.name);
+  };
 
+  const handleSaveEdit = async (id: string | number) => {
+    try {
+      await axios.patch(`/api/module/${id}`, { name: editedName });
+      setModules((prev) =>
+        prev.map((m) => (m._id === id ? { ...m, name: editedName } : m))
+      );
+      setEditRowId(null);
+      setEditedName("");
+    } catch (err) {
+      console.error("Error updating module:", err);
+      alert("Failed to update module name");
+    }
+  };
+
+  const handleSaveModule = async () => {
     if (!newModule.pipeline || !newModule.name || !newModule.status) {
-      alert("Please fill all fields");
+      alert("Please fill all fields"); // validation-ku leave panirunga
       return;
     }
 
-    const newId = modules.length + 1;
+    try {
+      // Send POST request to backend
+      const res = await axios.post(`/api/module/${newModule.pipeline}`, {
+        name: newModule.name,
+        status: newModule.status,
+        dropdowns: newModule.noOfdropdown,
+        createdBy: "Admin",
+      });
 
-    const newEntry: ModuleData = {
-      id: newId,
-      name: newModule.name,
-      dropdowns: 2,
-      createdOn: today,
-      createdBy: "Admin",
-      status: newModule.status,
-    };
+      // Add the newly created module to local state
+      setModules((prev) => [...prev, res.data]);
 
-    const updatedModules = [...modules, newEntry];
-    setModules(updatedModules);
+      // Reset form & close it
+      setShowForm(false);
+      setNewModule({
+        pipeline: "",
+        name: "",
+        status: "Active",
+        noOfdropdown: 0,
+      });
 
-    // ✅ Store in localStorage just like pipelineData
-    localStorage.setItem(`modules-${actualId}`, JSON.stringify(updatedModules));
-
-    setShowForm(false);
-    setNewModule({ pipeline: "", name: "", status: "" });
+      // ✅ Removed success alert
+    } catch (err) {
+      console.error("Error creating module:", err);
+      alert("Failed to create module"); // error-ku keep pannunga
+    }
   };
 
   return (
@@ -123,11 +150,6 @@ const ModuleView = () => {
         <MasterNav />
         <div className="content-wrapper">
           <div className="p-2 w-100">
-            {/* <h5 className="mb-5 fw-bold">
-            <FaChevronRight className="me-3" />
-            Choose the Module
-          </h5> */}
-
             <div className="d-flex align-items-center justify-content-between mb-3">
               <h5 className="p-2 fw-bold mb-0 d-flex align-items-center">
                 <FaChevronRight className="me-2" />
@@ -147,68 +169,61 @@ const ModuleView = () => {
             </div>
 
             {showForm && (
-              <div className="form-container mb-3">
-                <div className="card shadow-sm p-3 border border-primary rounded">
-                  <h6 className="fw-bold mb-3">Create Module</h6>
-                  <div className="d-flex flex-wrap align-items-end gap-3">
-                    <div>
-                      <label className="form-label mb-1">Pipeline</label>
-                      <select
-                        className="form-control"
-                        value={newModule.pipeline}
-                        onChange={(e) =>
-                          setNewModule({
-                            ...newModule,
-                            pipeline: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">Choose Pipeline</option>
-                        <option value="1">App Admin</option>
-                        <option value="2">Students</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="form-label mb-1">Module Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={newModule.name}
-                        onChange={(e) =>
-                          setNewModule({ ...newModule, name: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="form-label mb-1">Status</label>
-                      <select
-                        className="form-control"
-                        value={newModule.status}
-                        onChange={(e) =>
-                          setNewModule({ ...newModule, status: e.target.value })
-                        }
-                      >
-                        <option value="">Active/Inactive</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                      </select>
-                    </div>
-                    <div>
-                      <button
-                        className="btn btn-primary"
-                        onClick={handleSaveModule}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </div>
+              <div className="border p-3 rounded mb-4 shadow-sm bg-white">
+                <h6 className="mb-3 fw-bold">Create Module</h6>
+                <div className="d-flex flex-wrap gap-3 align-items-center">
+                  {/* Pipeline Dropdown */}
+                  <Form.Select
+                    value={newModule.pipeline}
+                    onChange={(e) =>
+                      setNewModule({ ...newModule, pipeline: e.target.value })
+                    }
+                    style={{ width: "250px", height: "45px" }}
+                  >
+                    <option value="">Choose Pipeline</option>
+                    {pipelineData.map((p) => (
+                      <option key={p._id} value={p._id.toString()}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+
+                  {/* Module Name Input */}
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Module Name"
+                    value={newModule.name}
+                    onChange={(e) =>
+                      setNewModule({ ...newModule, name: e.target.value })
+                    }
+                    style={{ width: "300px", height: "45px" }}
+                  />
+
+                  {/* Status Dropdown */}
+                  <Form.Select
+                    name="status"
+                    value={newModule.status}
+                    onChange={(e) =>
+                      setNewModule({ ...newModule, status: e.target.value })
+                    }
+                    style={{ width: "200px", height: "45px" }}
+                  >
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </Form.Select>
+
+                  {/* Save Button */}
+                  <Button variant="primary" onClick={handleSaveModule}>
+                    Save
+                  </Button>
                 </div>
               </div>
             )}
           </div>
 
           <div className="table-responsive">
-            <Table hover className="module-view">
+            <Table hover className="module-view align-middle text-center">
               <thead className="text-white" style={{ backgroundColor: "blue" }}>
                 <tr className="table-header-row">
                   <th>S.No</th>
@@ -217,42 +232,73 @@ const ModuleView = () => {
                   <th>Created On</th>
                   <th>Created By</th>
                   <th>Status</th>
-                  <th>View</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {modules.length > 0 ? (
+                {modules.length > 0 &&
                   modules.map((mod, idx) => (
-                    <tr key={mod.id}>
+                    <tr key={mod._id}>
                       <td>{idx + 1}</td>
-                      <td>{mod.name}</td>
-                      <td>{mod.dropdowns}</td>
-                      <td>{mod.createdOn}</td>
-                      <td>{mod.createdBy}</td>
-                      <td>
-                        <span className="status-badge">{mod.status}</span>
+                      <td style={{ textAlign: "left", paddingLeft: "10px" }}>
+                        {editRowId === mod._id ? (
+                          <input
+                            type="text"
+                            className="form-control"
+                            style={{ width: "200px" }}
+                            value={editedName ?? ""}
+                            onChange={(e) => setEditedName(e.target.value)}
+                          />
+                        ) : (
+                          mod.name
+                        )}
                       </td>
+                      <td>{mod.noOfdropdown}</td>
                       <td>
+                        {mod.createdon
+                          ? new Date(mod.createdon).toLocaleDateString("en-GB")
+                          : "-"}
+                      </td>
+                      <td>{mod.createdBy || "Admin"}</td>
+                      <td>
+                        <span className="status-badge">
+                          {mod.status.charAt(0).toUpperCase() +
+                            mod.status.slice(1)}
+                        </span>
+                      </td>
+                      <td
+                        className="gap-2"
+                        style={{ textAlign: "left", paddingLeft: "10px" }}
+                      >
+                        {editRowId === mod._id ? (
+                          <Button
+                            variant="link"
+                            className="p-0"
+                            onClick={() => handleSaveEdit(mod._id)}
+                          >
+                            ✅
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="link"
+                            className="p-0"
+                            onClick={() => handleEditClick(mod)}
+                          >
+                            <FaEdit size={16} />
+                          </Button>
+                        )}
                         <Button
                           variant="link"
-                          className="view-btn p-0"
-                          onClick={() => handleViewClick(mod.id)}
+                          className="p-0"
+                          onClick={() => handleViewClick(mod._id)}
                         >
                           <span className="arrow-icon-circle">
-                            <FaArrowRight size={10} />{" "}
-                            {/* Adjust size as needed */}
+                            <FaArrowRight size={10} />
                           </span>
                         </Button>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="text-center text-muted">
-                      No modules found for this pipeline.
-                    </td>
-                  </tr>
-                )}
+                  ))}
               </tbody>
             </Table>
           </div>
